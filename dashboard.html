@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Riverside Bakery Co | Alethia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F1ECDE; --bg-panel: #E7DFC9; --plate-bg: #FBF8EF;
+  --ink: #1B3A57; --ink-soft: #52708A; --accent: #9C6F16;
+  --line: rgba(27,58,87,0.32); --line-strong: rgba(27,58,87,0.62);
+  --grid-line: rgba(27,58,87,0.07);
+  --muted: var(--ink-soft); --faint: var(--ink-soft); --surface: var(--plate-bg); --focus: var(--ink);
+  --head: "Space Grotesk", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --ease: cubic-bezier(.22,.8,.3,1);
+  --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0D2438; --bg-panel: #11314B; --plate-bg: #15364F;
+    --ink: #DDEBF6; --ink-soft: #8EB1CB; --accent: #E7B84C;
+    --line: rgba(221,235,246,0.28); --line-strong: rgba(221,235,246,0.5);
+    --grid-line: rgba(221,235,246,0.06);
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--bg);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 34px 34px;
+  font: 400 18px/1.6 var(--body); -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p, ul, ol, dl, dd, figure { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 3px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 10px 14px; z-index: 100; font-family: var(--head); }
+.skip:focus { left: 8px; }
+.num { font-variant-numeric: tabular-nums; }
+.hum { color: var(--accent); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- hero ---------- */
+.hero-wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 0 56px; }
+header.top { padding: 40px 0 44px; }
+.brandline { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; font: 500 14px var(--head); }
+.biz { border: 1px solid var(--line-strong); border-radius: 3px; padding: 5px 8px; }
+.who { color: var(--accent); font-weight: 600; }
+.claim { font: 700 clamp(34px, 8vw, 62px)/1.04 var(--head); letter-spacing: -0.02em; margin-top: var(--s6); max-width: 15ch; }
+.claim .is { text-decoration: underline; text-decoration-thickness: .07em; text-underline-offset: .1em; text-decoration-color: var(--ink); }
+.claim .not { color: var(--ink-soft); font-weight: 500; }
+.rule { height: 1px; background: var(--line-strong); margin-top: var(--s5); transform-origin: left; animation: draw .9s var(--ease) both; }
+.claim-sub { margin-top: var(--s4); color: var(--ink); max-width: 54ch; font-size: 19px; }
+.week { margin-top: var(--s5); display: flex; align-items: center; gap: var(--s4); flex-wrap: wrap; font: 400 16px var(--head); }
+.week strong { font-weight: 600; }
+.rail { display: flex; gap: 3px; flex: 1 1 200px; max-width: 320px; }
+.rail i { flex: 1; height: 10px; border: 1px solid var(--line-strong); border-radius: 1px; }
+.rail i.done { background: var(--ink); border-color: var(--ink); }
+.rail i.now { border-color: var(--ink); background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+@keyframes draw { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ---------- spine + plates ---------- */
+.stack { position: relative; max-width: 900px; margin: 0 auto; padding: 0 20px 0 56px; --sp: 20px; }
+.stack::before { content: ""; position: absolute; left: var(--sp); top: 0; bottom: 0; width: 1px; background: var(--line-strong); }
+.stack > section, .stack > aside.hit.on {
+  --ind: 0px; --out: 0px; position: relative; margin: 0 var(--out) 64px var(--ind);
+  background: var(--plate-bg); border: 1px solid var(--line-strong); border-radius: 3px; padding: 30px 30px 34px;
+}
+.stack { counter-reset: sec; }
+.stack > section { counter-increment: sec; }
+.stack > section:nth-of-type(even) { --ind: 32px; }
+.stack > section:nth-of-type(odd) { --out: 32px; }
+.stack > aside.hit.on { --ind: 16px; --out: 16px; }
+.stack > section::before, .stack > aside.hit.on::before { content: ""; position: absolute; top: 44px; height: 1px; background: var(--line-strong); left: calc(-1 * (36px + var(--ind))); width: calc(36px + var(--ind)); }
+.stack > section::after, .stack > aside.hit.on::after { content: ""; position: absolute; top: 40px; width: 9px; height: 9px; background: var(--ink); border: 1px solid var(--line-strong); left: calc(-1 * (36px + var(--ind)) - 5px); }
+.stack > aside.hit:not(.on) { display: none; }
+.stack > aside.hit.on { animation: rise .5s var(--ease) both; }
+.h2 { font: 600 clamp(24px, 4.4vw, 32px)/1.15 var(--head); letter-spacing: -0.01em; display: flex; align-items: center; gap: 14px; }
+.h2::before { content: counter(sec, decimal-leading-zero); font: 600 14px/1 var(--head); border: 1px solid var(--line-strong); border-radius: 3px; padding: 5px 8px; letter-spacing: 0; }
+.lede { color: var(--ink-soft); margin-top: var(--s3); max-width: 58ch; }
+.sec-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s4); flex-wrap: wrap; }
+.count { font: 500 15px var(--head); color: var(--ink-soft); border: 1px solid var(--line); border-radius: 3px; padding: 4px 8px; }
+
+/* ---------- buttons ---------- */
+.btn { min-height: 44px; padding: 10px 18px; border-radius: 3px; border: 1px solid var(--ink); background: transparent; font: 500 16px var(--head); transition: background .2s, color .2s, border-color .2s, opacity .2s; }
+.btn:hover { background: var(--ink); color: var(--plate-bg); }
+.btn.primary { background: var(--ink); color: var(--plate-bg); font-weight: 600; }
+.btn.primary:hover { background: transparent; color: var(--ink); }
+.btn:disabled { opacity: .45; cursor: not-allowed; background: transparent; color: var(--ink); border-color: var(--line); }
+.btn:active { opacity: .85; }
+
+/* ---------- target-hit banner ---------- */
+.hit-kicker { font: 600 15px var(--head); display: flex; align-items: center; gap: var(--s2); }
+.hit-title { font: 600 clamp(24px, 5.6vw, 34px)/1.15 var(--head); margin-top: var(--s2); letter-spacing: -0.01em; }
+.hit-sub { color: var(--ink-soft); margin-top: var(--s3); max-width: 58ch; }
+.next { margin-top: var(--s5); position: relative; border: 1px solid var(--line-strong); background: var(--bg-panel); border-radius: 3px; padding: var(--s5); overflow: hidden; }
+.next h3 { font: 600 19px/1.3 var(--head); }
+.next .peek { color: var(--ink-soft); margin-top: var(--s2); }
+.veil-body { margin-top: var(--s3); transition: filter .5s var(--ease), opacity .5s var(--ease); }
+.next[data-veiled="true"] .veil-body { filter: blur(7px); opacity: .55; user-select: none; pointer-events: none; }
+.lift { margin-top: var(--s4); }
+.next[data-veiled="false"] .lift { display: none; }
+.next-actions { margin-top: var(--s4); display: none; color: var(--ink-soft); }
+.next[data-veiled="false"] .next-actions { display: block; }
+
+/* ---------- tasks ---------- */
+.tasks { margin-top: var(--s5); border-top: 1px solid var(--line-strong); }
+.task { border-bottom: 1px solid var(--line); padding: var(--s5) 0; }
+.task-top { display: flex; gap: var(--s4); align-items: flex-start; }
+.mark { flex: none; width: 26px; height: 26px; border: 1.5px solid var(--ink); border-radius: 3px; margin-top: 3px; display: grid; place-items: center; transition: background .25s; }
+.mark svg { width: 14px; height: 14px; opacity: 0; stroke: var(--plate-bg); transition: opacity .2s; }
+.task.done .mark { background: var(--ink); }
+.task.done .mark svg { opacity: 1; }
+.task-main { flex: 1; min-width: 0; }
+.task-title { font: 500 19px/1.35 var(--head); }
+.task.done .task-title { color: var(--ink-soft); }
+.meta { display: flex; flex-wrap: wrap; gap: 2px 18px; color: var(--ink-soft); font: 400 15px var(--head); margin-top: var(--s2); }
+.meta b { font-weight: 600; color: var(--accent); }
+.meta span:nth-child(2) b { color: var(--ink); }
+.soon { font-weight: 600; color: var(--ink); border-bottom: 1px solid var(--ink); }
+.task-cta { margin-top: var(--s4); }
+.proof { display: none; margin-top: var(--s4); padding: var(--s4); border: 1px solid var(--line-strong); border-left: 3px solid var(--accent); border-radius: 3px; background: var(--bg-panel); }
+.proof.open { display: block; animation: rise .3s var(--ease) both; }
+.proof label { display: block; font: 600 16px var(--head); }
+.proof .hint { display: block; color: var(--ink-soft); font: 400 15px var(--head); margin-top: 2px; }
+.field { width: 100%; margin-top: var(--s3); padding: 12px; min-height: 96px; background: var(--plate-bg); border: 1px solid var(--line-strong); border-radius: 3px; resize: vertical; line-height: 1.5; font-family: var(--body); }
+.field:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+.file { margin-top: var(--s3); display: flex; align-items: center; gap: var(--s3); flex-wrap: wrap; position: relative; }
+.file input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.file label.btn { display: inline-flex; align-items: center; gap: var(--s2); margin: 0; font-weight: 500; }
+.file input:focus-visible + label.btn { outline: 2px solid var(--ink); outline-offset: 3px; }
+.fname { color: var(--ink-soft); font: 400 15px var(--head); overflow-wrap: anywhere; }
+.proof-actions { margin-top: var(--s4); display: flex; align-items: center; gap: var(--s4); flex-wrap: wrap; }
+.proof-note { color: var(--ink-soft); font: 400 15px var(--head); }
+.done-note { display: none; margin-top: var(--s3); color: var(--ink-soft); font-size: 16px; overflow-wrap: anywhere; }
+.task.done .done-note { display: block; }
+.task.done .task-cta, .task.done .proof { display: none; }
+.allset { display: none; margin-top: var(--s4); font: 600 16px var(--head); }
+.allset.on { display: block; }
+
+/* ---------- plan ---------- */
+.plan-toggle { width: 100%; text-align: left; background: none; border: 0; border-top: 1px solid var(--line-strong); border-bottom: 1px solid var(--line-strong); padding: var(--s4) 0; min-height: 56px; display: flex; align-items: center; justify-content: space-between; gap: var(--s4); margin-top: var(--s5); }
+.plan-toggle .one { font: 600 18px var(--head); }
+.plan-toggle .chev { flex: none; width: 20px; height: 20px; transition: transform .3s var(--ease); stroke: var(--ink-soft); }
+.plan-toggle[aria-expanded="true"] .chev { transform: rotate(180deg); }
+.plan-toggle:hover .chev { stroke: var(--ink); }
+.plan-toggle > span:last-child { font-family: var(--head); }
+.plan-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s var(--ease); }
+.plan-panel.open { grid-template-rows: 1fr; }
+.plan-panel > div { overflow: hidden; }
+.plan-body { padding: var(--s5) 0 var(--s2); }
+.method { font-size: 20px; line-height: 1.45; max-width: 46ch; }
+.gantt { margin-top: var(--s6); position: relative; }
+.weeks { display: grid; grid-template-columns: repeat(12, 1fr); font: 400 13px var(--head); color: var(--ink-soft); text-align: center; }
+.phases { position: relative; margin-top: var(--s2); }
+.phase { margin-top: var(--s4); }
+.phase-name { font: 400 15px var(--head); display: flex; gap: var(--s2); flex-wrap: wrap; align-items: baseline; }
+.phase-name b { font-weight: 600; }
+.phase-name span { color: var(--ink-soft); }
+.track { display: grid; grid-template-columns: repeat(12, 1fr); margin-top: 6px; height: 12px; background: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px calc(100%/12)); }
+.bar { height: 12px; border-radius: 1px; border: 1px solid var(--ink); }
+.bar.done { background: var(--ink); }
+.bar.now { background: linear-gradient(90deg, var(--ink) 20%, transparent 20%); }
+.here { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--ink); pointer-events: none; }
+.here span { position: absolute; top: -22px; left: 6px; font: 600 13px var(--head); white-space: nowrap; }
+.subs { margin-top: var(--s6); }
+.subs h3 { font: 600 17px/1.3 var(--head); }
+.subs li { display: flex; justify-content: space-between; gap: var(--s4); padding: var(--s3) 0; border-bottom: 1px solid var(--line); }
+.subs li:first-of-type { margin-top: var(--s2); border-top: 1px solid var(--line-strong); }
+.st { color: var(--ink-soft); font: 400 15px var(--head); white-space: nowrap; }
+.st.live { color: var(--ink); font-weight: 600; }
+
+/* ---------- KPIs ---------- */
+.kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: var(--s4); margin-top: var(--s5); }
+.kpi { border: 1px solid var(--line-strong); background: var(--bg-panel); border-radius: 3px; padding: var(--s5) var(--s4) var(--s4); display: flex; flex-direction: column; }
+.kpi h3 { font: 600 17px/1.3 var(--head); }
+.kpi .state { display: inline-flex; align-items: center; gap: 6px; font: 600 15px var(--head); margin-top: var(--s2); }
+.kpi.flat .state { color: var(--ink-soft); }
+.kpi .now { margin-top: var(--s4); display: flex; align-items: baseline; gap: 8px; }
+.kpi .now strong { font: 700 42px/1 var(--head); letter-spacing: -0.02em; }
+.kpi .now span { color: var(--ink-soft); font: 400 15px var(--head); }
+.spark { display: block; width: 100%; height: 64px; margin-top: var(--s4); overflow: visible; }
+.spark .ln { fill: none; stroke: var(--ink); stroke-width: 2.25; stroke-linecap: round; stroke-linejoin: round; }
+.kpi.flat .spark .ln { stroke: var(--ink-soft); stroke-dasharray: 1 5; stroke-width: 3; }
+.spark .tg { stroke: var(--ink-soft); stroke-width: 1; stroke-dasharray: 3 4; }
+.spark .dot { fill: var(--ink); }
+.kpi.flat .spark .dot { fill: var(--ink-soft); }
+.meter { margin-top: var(--s4); height: 8px; border: 1px solid var(--line-strong); border-radius: 1px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--ink); transform-origin: left; transition: transform .8s var(--ease); }
+.kpi.flat .meter i { background: repeating-linear-gradient(135deg, var(--ink-soft) 0 2px, transparent 2px 5px); }
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s2); margin-top: var(--s3); font: 400 14px var(--head); color: var(--ink-soft); }
+.trio div:nth-child(2) { text-align: center; }
+.trio div:nth-child(3) { text-align: right; }
+.trio b { display: block; color: var(--ink); font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+.kpi .why { margin-top: var(--s4); color: var(--ink-soft); font-size: 16px; padding-top: var(--s3); border-top: 1px solid var(--line); }
+
+/* ---------- check-in ---------- */
+.msg { margin-top: var(--s5); display: flex; gap: var(--s3); align-items: flex-start; }
+.avatar { flex: none; width: 44px; height: 44px; border-radius: 3px; object-fit: cover; object-position: 50% 30%; border: 1px solid var(--ink); background: #FDF9F3; }
+.bubble { flex: 1; min-width: 0; background: var(--bg-panel); border: 1px solid var(--line-strong); border-radius: 3px; padding: var(--s5); }
+.from { font: 400 15px var(--head); color: var(--ink-soft); }
+.from b { color: var(--ink); font-weight: 600; }
+.bubble p.say { margin-top: var(--s3); }
+.knows { margin: var(--s4) 0; padding: var(--s3) var(--s4); background: var(--plate-bg); border: 1px solid var(--line); border-left: 3px solid var(--ink); font-size: 16px; color: var(--ink); }
+.knows b { font: 600 15px var(--head); display: block; margin-bottom: 2px; }
+.knows li { display: flex; gap: var(--s2); }
+.knows li::before { content: ""; flex: none; width: 6px; height: 6px; margin-top: 11px; border: 1px solid var(--ink); }
+.q { margin-top: var(--s5); }
+.q label { display: block; font: 600 17px/1.4 var(--head); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s2); margin-top: var(--s3); }
+.chip { min-height: 44px; padding: 8px 14px; border: 1px solid var(--line-strong); background: transparent; border-radius: 3px; font: 500 15px var(--head); transition: background .2s, color .2s; }
+.chip:hover { background: var(--plate-bg); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--plate-bg); border-color: var(--ink); }
+.q .field { min-height: 72px; margin-top: var(--s3); }
+.send { margin-top: var(--s5); display: flex; align-items: center; gap: var(--s4); flex-wrap: wrap; }
+.sent { display: none; margin-top: var(--s4); font: 600 16px var(--head); }
+.sent.on { display: block; }
+
+/* ---------- library ---------- */
+.lib { margin-top: var(--s5); border-top: 1px solid var(--line-strong); }
+.res { display: grid; grid-template-columns: 40px 1fr auto; gap: var(--s4); align-items: start; padding: var(--s5) 0; border-bottom: 1px solid var(--line); }
+.res svg.ico { width: 28px; height: 28px; stroke: var(--ink); margin-top: 2px; }
+.res h3 { font: 600 18px/1.35 var(--head); }
+.res .kind { color: var(--ink-soft); font: 400 14px var(--head); margin-top: 2px; }
+.res .reason { margin-top: var(--s2); color: var(--ink); font-size: 17px; max-width: 54ch; }
+.res .reason b { font: 600 15px var(--head); border: 1px solid var(--line-strong); border-radius: 3px; padding: 2px 6px; margin-right: 6px; }
+.res .btn { align-self: center; }
+
+/* ---------- title block ---------- */
+.foot-wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 110px 56px; }
+.tb { border: 1px solid var(--line-strong); border-radius: 3px; background: var(--plate-bg); display: grid; grid-template-columns: repeat(3, 1fr); }
+.tb > div { padding: 14px 18px 16px; border-right: 1px solid var(--line-strong); }
+.tb > div:last-child { border-right: 0; }
+.tb dt { font: 400 13px var(--head); color: var(--ink-soft); }
+.tb dd { font: 500 17px/1.3 var(--head); margin-top: 4px; }
+.tb-note { max-width: 58ch; margin-top: var(--s4); color: var(--ink-soft); font-size: 16px; }
+
+/* ---------- prototype control ---------- */
+.proto { position: fixed; right: 12px; bottom: 12px; z-index: 50; display: flex; align-items: center; gap: var(--s3); background: var(--ink); color: var(--plate-bg); padding: 6px 8px 6px 14px; border-radius: 3px; font: 500 14px var(--head); min-height: 48px; }
+.proto button { min-height: 44px; min-width: 44px; padding: 0 14px; border-radius: 3px; border: 1px solid currentColor; background: transparent; color: inherit; font: 600 14px var(--head); }
+.proto button[aria-checked="true"] { background: var(--plate-bg); border-color: var(--plate-bg); color: var(--ink); }
+
+@media (max-width: 720px) {
+  body { font-size: 17px; }
+  .hero-wrap, .stack, .foot-wrap { padding-left: 34px; padding-right: 14px; }
+  .stack { --sp: 12px; }
+  .stack > section, .stack > aside.hit.on { padding: 22px 16px 26px; margin-bottom: 48px; }
+  .stack > section:nth-of-type(even) { --ind: 10px; }
+  .stack > section:nth-of-type(odd) { --out: 10px; }
+  .stack > aside.hit.on { --ind: 6px; --out: 6px; }
+  .stack > section::before, .stack > aside.hit.on::before { left: calc(-1 * (22px + var(--ind))); width: calc(22px + var(--ind)); top: 32px; }
+  .stack > section::after, .stack > aside.hit.on::after { left: calc(-1 * (22px + var(--ind)) - 5px); top: 28px; }
+  .h2 { gap: 10px; }
+  .res { grid-template-columns: 32px 1fr; }
+  .res .btn { grid-column: 2; justify-self: start; }
+  .bubble { padding: var(--s4); }
+  .avatar { width: 38px; height: 38px; }
+  .weeks { font-size: 11px; }
+  .tb { grid-template-columns: 1fr; }
+  .tb > div { border-right: 0; border-bottom: 1px solid var(--line-strong); }
+  .tb > div:last-child { border-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#this-week">Skip to this week</a>
+
+<div class="hero-wrap">
+<header class="top">
+  <div class="brandline">
+    <span class="biz">Riverside Bakery Co</span>
+    <span class="who">Marisol Vega, owner</span>
+  </div>
+  <h1 class="claim">Your constraint: <span class="is">conversion</span>, <span class="not">not demand</span></h1>
+  <div class="rule" aria-hidden="true"></div>
+  <p class="claim-sub">People already find you. Inquiries are healthy. The leak sits between an inquiry and an order, so that is the only place we work.</p>
+  <div class="week">
+    <span><strong>Week four of 12</strong> <span style="color:var(--muted)">&middot; next update Monday</span></span>
+    <div class="rail" role="img" aria-label="Week four of twelve. Three weeks complete.">
+      <i class="done"></i><i class="done"></i><i class="done"></i><i class="now"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+    </div>
+  </div>
+</header>
+</div>
+
+<main class="stack">
+
+<!-- 7. Progress banner (conditional) -->
+<aside class="hit" id="hit" aria-labelledby="hit-title" tabindex="-1">
+  <div class="hit-inner">
+    <p class="hit-kicker">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>
+      Target reached
+    </p>
+    <h2 class="hit-title" id="hit-title">Replies now go out in under two hours.</h2>
+    <p class="hit-sub">You started at 26 hours. This landed in week four, three weeks ahead of plan. Quotes that get a fast answer are the ones that turn into orders.</p>
+
+    <div class="next" id="next" data-veiled="true">
+      <h3>What I am seeing next</h3>
+      <p class="peek">Once replies are fast, a different gap tends to show. I have a first read on yours.</p>
+      <div class="veil-body" id="veil-body" aria-hidden="true">
+        <p><b>Repeat orders.</b> Of 38 catering customers this year, 29 ordered once and have not come back. Nothing is broken yet, but this is where revenue will leak next.</p>
+      </div>
+      <button class="btn primary lift" id="lift" type="button">Lift the veil</button>
+      <div class="next-actions" id="next-actions">
+        <p>I will check this against your numbers before we change anything. Your current plan keeps running until you say otherwise.</p>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- 2. This week -->
+<section id="this-week" aria-labelledby="h-week">
+  <div class="sec-head">
+    <h2 class="h2" id="h-week">This week</h2>
+    <span class="count" id="task-count" aria-live="polite">Three open</span>
+  </div>
+  <p class="lede">Three things, in the order that moves your numbers most. Each one closes with proof, so I can see what changed.</p>
+
+  <ul class="tasks" id="tasks">
+    <li class="task" data-id="t1" data-proof="text">
+      <div class="task-top">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <div class="task-main">
+          <p class="task-title">Follow up on every catering quote that has sat unanswered for two days</p>
+          <p class="meta"><span>Owner: <b>You</b></span><span>Due: <b>Sunday, Sep 20</b> <span class="soon">(in two days)</span></span></p>
+          <p class="done-note"></p>
+          <div class="task-cta"><button class="btn" type="button" aria-expanded="false" aria-controls="p-t1">Add proof</button></div>
+          <div class="proof" id="p-t1">
+            <label for="f-t1">Describe what changed</label>
+            <span class="hint" id="h-t1">Which quotes did you follow up on, and what did you send? A few sentences is enough.</span>
+            <textarea class="field" id="f-t1" aria-describedby="h-t1" placeholder="I followed up on four quotes from the last week..."></textarea>
+            <div class="proof-actions"><button class="btn primary" type="button" disabled>Mark done</button><span class="proof-note">Add a few words of proof to finish this.</span></div>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="task" data-id="t2" data-proof="file">
+      <div class="task-top">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <div class="task-main">
+          <p class="task-title">Turn on guest checkout for preorders so nobody has to make an account</p>
+          <p class="meta"><span>Owner: <b>Theo, your web helper</b></span><span>Due: <b>Tuesday, Sep 22</b></span></p>
+          <p class="done-note"></p>
+          <div class="task-cta"><button class="btn" type="button" aria-expanded="false" aria-controls="p-t2">Add proof</button></div>
+          <div class="proof" id="p-t2">
+            <label for="f-t2">Upload a screenshot of the new checkout</label>
+            <span class="hint" id="h-t2">Show the first screen a customer sees after tapping Preorder.</span>
+            <div class="file">
+              <input type="file" id="f-t2" accept="image/*" aria-describedby="h-t2">
+              <label for="f-t2" class="btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M6 10l6-6 6 6M4 20h16"/></svg>
+                Choose a screenshot
+              </label>
+              <span class="fname">No file chosen</span>
+            </div>
+            <div class="proof-actions"><button class="btn primary" type="button" disabled>Mark done</button><span class="proof-note">Upload the screenshot to finish this.</span></div>
+          </div>
+        </div>
+      </div>
+    </li>
+
+    <li class="task" data-id="t3" data-proof="text">
+      <div class="task-top">
+        <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+        <div class="task-main">
+          <p class="task-title">Call the three catering leads from last month who went quiet</p>
+          <p class="meta"><span>Owner: <b>You</b></span><span>Due: <b>Friday, Sep 25</b></span></p>
+          <p class="done-note"></p>
+          <div class="task-cta"><button class="btn" type="button" aria-expanded="false" aria-controls="p-t3">Add proof</button></div>
+          <div class="proof" id="p-t3">
+            <label for="f-t3">Describe what they told you</label>
+            <span class="hint" id="h-t3">In their words if you can. The reason a quote goes quiet is the most useful thing I can learn.</span>
+            <textarea class="field" id="f-t3" aria-describedby="h-t3" placeholder="The Alvarez family said the price felt unclear..."></textarea>
+            <div class="proof-actions"><button class="btn primary" type="button" disabled>Mark done</button><span class="proof-note">Add a few words of proof to finish this.</span></div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <p class="allset" id="allset">All three are done. I will read the numbers on Monday and tell you what moved.</p>
+</section>
+
+<!-- 3. Plan -->
+<section aria-labelledby="h-plan">
+  <h2 class="h2" id="h-plan">The plan</h2>
+  <button class="plan-toggle" id="plan-toggle" type="button" aria-expanded="false" aria-controls="plan-panel">
+    <span class="one">Fix the leak before adding water.</span>
+    <span style="display:flex;align-items:center;gap:8px;color:var(--muted);font-size:15px;flex:none"><span id="plan-label">Show the plan</span>
+      <svg class="chev" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span>
+  </button>
+  <div class="plan-panel" id="plan-panel">
+    <div>
+      <div class="plan-body">
+        <p class="method">We close the gaps between an inquiry and an order first, and only then spend anything on bringing in more people.</p>
+
+        <div class="gantt" role="group" aria-label="Twelve week timeline">
+          <div class="weeks" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span></div>
+          <div class="phases">
+            <div class="here" style="left:calc(100% / 12 * 3.4)" aria-hidden="true"><span>You are here</span></div>
+            <div class="phase">
+              <p class="phase-name"><b>See the leak</b><span>Weeks one to three &middot; done</span></p>
+              <div class="track"><div class="bar done" style="grid-column:1 / 4"></div></div>
+            </div>
+            <div class="phase">
+              <p class="phase-name"><b>Fix the handoffs</b><span>Weeks four to eight &middot; in progress</span></p>
+              <div class="track"><div class="bar now" style="grid-column:4 / 9"></div></div>
+            </div>
+            <div class="phase">
+              <p class="phase-name"><b>Make it routine</b><span>Weeks nine to 11 &middot; next</span></p>
+              <div class="track"><div class="bar" style="grid-column:9 / 12"></div></div>
+            </div>
+            <div class="phase">
+              <p class="phase-name"><b>Review and find the next gap</b><span>Week 12</span></p>
+              <div class="track"><div class="bar" style="grid-column:12 / 13"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="subs">
+          <h3>Sub-projects</h3>
+          <ul>
+            <li><span>Quote follow-up routine</span><span class="st live">In progress</span></li>
+            <li><span>Guest checkout for preorders</span><span class="st live">In progress</span></li>
+            <li><span>Two-hour reply rule</span><span class="st live" id="sub-reply">Nearly there</span></li>
+            <li><span>One-page catering menu with prices</span><span class="st">Starts week six</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. KPIs -->
+<section aria-labelledby="h-kpi">
+  <h2 class="h2" id="h-kpi">The numbers</h2>
+  <p class="lede">Three numbers show whether the leak is closing. Where one is not moving, I will say so.</p>
+  <div class="kpis" id="kpis"></div>
+</section>
+
+<!-- 5. Check-in -->
+<section aria-labelledby="h-check">
+  <h2 class="h2" id="h-check">This week's check-in</h2>
+  <div class="msg">
+    <img class="avatar" alt="Alethia" src="data:image/jpeg;base64,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" width="44" height="44">
+    <div class="bubble">
+      <p class="from"><b>Alethia</b> &middot; Friday, 8:02 am</p>
+      <p class="say">Morning, Marisol. Three quick questions, and I have already read your numbers, so I will not ask for anything I can see.</p>
+      <div class="knows">
+        <b>Already know</b>
+        <ul>
+          <li>You sent 11 catering quotes this week, and four are still unanswered.</li>
+          <li>Preorder checkout completion has stayed at 45% for three weeks.</li>
+          <li>Replies go out in about two and a half hours now.</li>
+        </ul>
+      </div>
+
+      <form id="checkin" novalidate>
+        <div class="q">
+          <label for="a1" id="q1">When a quote goes quiet, has anyone told you why?</label>
+          <div class="chips" role="group" aria-labelledby="q1">
+            <button type="button" class="chip" aria-pressed="false">Price</button>
+            <button type="button" class="chip" aria-pressed="false">Timing</button>
+            <button type="button" class="chip" aria-pressed="false">Chose someone else</button>
+            <button type="button" class="chip" aria-pressed="false">Nobody has said</button>
+          </div>
+          <textarea class="field" id="a1" placeholder="Anything more you want to add"></textarea>
+        </div>
+        <div class="q">
+          <label for="a2">Did any customer mention the preorder page this week?</label>
+          <textarea class="field" id="a2" placeholder="Even a passing comment helps"></textarea>
+        </div>
+        <div class="q">
+          <label for="a3">What got in the way of the follow-ups, if anything?</label>
+          <textarea class="field" id="a3" placeholder="Time, not knowing what to say, something else"></textarea>
+        </div>
+        <div class="send">
+          <button class="btn primary" type="submit" id="send">Send to Alethia</button>
+          <span class="proof-note">Short answers are fine.</span>
+        </div>
+        <p class="sent" id="sent" role="status">Thank you. I will read this before Monday and fold it into the update.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Library -->
+<section aria-labelledby="h-lib">
+  <h2 class="h2" id="h-lib">Worth your time this week</h2>
+  <p class="lede">Picked for a bakery whose demand is fine and whose conversion is not, and for where your numbers are right now.</p>
+  <ul class="lib">
+    <li class="res">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>
+      <div>
+        <h3>The two-hour quote: a one-page reply script</h3>
+        <p class="kind">Template &middot; five minutes</p>
+        <p class="reason"><b>Why now:</b> your replies are at two and a half hours, and this gets them under two.</p>
+      </div>
+      <button class="btn" type="button">Open</button>
+    </li>
+    <li class="res">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5"/></svg>
+      <div>
+        <h3>Why small food shops win with guest checkout</h3>
+        <p class="kind">Article &middot; six minute read</p>
+        <p class="reason"><b>Why now:</b> preorder completion has sat at 45% for three weeks, and Theo builds the fix on Tuesday.</p>
+      </div>
+      <button class="btn" type="button">Open</button>
+    </li>
+    <li class="res">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 21l1.8-5.5A8 8 0 1 1 21 12z"/></svg>
+      <div>
+        <h3>Follow-up texts that do not sound pushy</h3>
+        <p class="kind">Three ready-to-send messages</p>
+        <p class="reason"><b>Why now:</b> four quotes have sat unanswered for two days or more, and your first task is to chase them.</p>
+      </div>
+      <button class="btn" type="button">Open</button>
+    </li>
+    <li class="res">
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4.5-2.5z"/></svg>
+      <div>
+        <h3>Pricing a catering tray so the quote is an easy yes</h3>
+        <p class="kind">Video &middot; eight minutes</p>
+        <p class="reason"><b>Why now:</b> 31% of quotes become orders, and unclear pricing is the usual reason the rest stall.</p>
+      </div>
+      <button class="btn" type="button">Open</button>
+    </li>
+  </ul>
+</section>
+
+</main>
+
+<div class="foot-wrap">
+  <dl class="tb" aria-label="Drawing title block">
+    <div><dt>Drawing</dt><dd>Client dashboard, Riverside Bakery Co</dd></div>
+    <div><dt>For</dt><dd class="hum">Marisol Vega</dd></div>
+    <div><dt>Status</dt><dd>Week four of 12, prototype</dd></div>
+  </dl>
+  <p class="tb-note">Alethia reads your numbers every Monday and sends the next update to your phone. You do not need to open this page to stay on track.</p>
+</div>
+
+<div class="proto" role="group" aria-label="Prototype controls">
+  <span id="proto-l">Preview: target hit</span>
+  <button type="button" role="switch" aria-checked="false" aria-labelledby="proto-l" id="proto-sw">Off</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- mock data ---------- */
+  var KPIS = [
+    { id: "quote", name: "Catering quotes that become orders", unit: "%", base: 18, now: 31, goal: 40, dir: "up",
+      series: [18, 20, 24, 28, 31], state: "up",
+      label: "Moving up", why: "Up thirteen points since week one. Follow-ups are doing this work." },
+    { id: "preorder", name: "Preorders completed at checkout", unit: "%", base: 44, now: 45, goal: 65, dir: "up",
+      series: [44, 46, 45, 45, 45], state: "flat",
+      label: "Flat for three weeks", why: "No movement yet. Guest checkout lands Tuesday and is aimed at exactly this." },
+    { id: "reply", name: "Time to first reply on an inquiry", unit: " hrs", base: 26, now: 2.5, goal: 2, dir: "down",
+      series: [26, 14, 6, 3.5, 2.5], state: "up",
+      label: "Nearly there", why: "Lower is better. About half an hour from the goal." }
+  ];
+  var HIT_REPLY = { now: 1.8, series: [26, 14, 6, 3.5, 2.5, 1.8], label: "Target reached", why: "Under two hours. Held for the last three inquiries." };
+
+  /* ---------- KPI rendering ---------- */
+  var NS = "http://www.w3.org/2000/svg";
+  function fmt(n, unit) { return (Math.round(n * 10) / 10) + unit; }
+  function progress(k, now) {
+    var p = (now - k.base) / (k.goal - k.base);
+    return Math.max(0, Math.min(1, p));
+  }
+  function spark(k, series) {
+    var W = 240, H = 64, pad = 6;
+    var all = series.concat([k.goal]);
+    var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all);
+    if (hi === lo) { hi += 1; }
+    var x = function (i) { return pad + i * (W - pad * 2) / (series.length - 1); };
+    var y = function (v) { return H - pad - (v - lo) / (hi - lo) * (H - pad * 2); };
+    var d = series.map(function (v, i) { return (i ? "L" : "M") + x(i).toFixed(1) + " " + y(v).toFixed(1); }).join(" ");
+    var last = series.length - 1;
+    return '<svg class="spark" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" aria-hidden="true">' +
+      '<line class="tg" x1="0" x2="' + W + '" y1="' + y(k.goal).toFixed(1) + '" y2="' + y(k.goal).toFixed(1) + '"/>' +
+      '<path class="ln" vector-effect="non-scaling-stroke" d="' + d + '"/>' +
+      '<circle class="dot" cx="' + x(last).toFixed(1) + '" cy="' + y(series[last]).toFixed(1) + '" r="4"/></svg>';
+  }
+  var ICON_UP = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16l6-6 4 4 6-8"/></svg>';
+  var ICON_FLAT = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 12h16"/></svg>';
+  var ICON_CHECK = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+
+  function kpiHTML(k, over) {
+    var now = over ? over.now : k.now, series = over ? over.series : k.series;
+    var label = over ? over.label : k.label, why = over ? over.why : k.why;
+    var flat = k.state === "flat";
+    var icon = flat ? ICON_FLAT : (over ? ICON_CHECK : ICON_UP);
+    var pct = Math.round(progress(k, now) * 100);
+    var goalWord = k.dir === "down" ? "Goal: under " + fmt(k.goal, k.unit) : "Goal";
+    var summary = k.name + ". Started at " + fmt(k.base, k.unit) + ", now " + fmt(now, k.unit) + ", goal " + fmt(k.goal, k.unit) + ". " + label + ".";
+    return '<article class="kpi' + (flat ? ' flat' : '') + '" aria-label="' + summary + '">' +
+      '<h3>' + k.name + '</h3>' +
+      '<p class="state">' + icon + '<span>' + label + '</span></p>' +
+      '<p class="now"><strong class="num">' + fmt(now, k.unit) + '</strong><span>now</span></p>' +
+      spark(k, series) +
+      '<div class="meter" role="img" aria-label="' + pct + ' percent of the way to the goal"><i style="transform:scaleX(' + (pct / 100) + ')"></i></div>' +
+      '<div class="trio"><div>Started<b>' + fmt(k.base, k.unit) + '</b></div><div>Now<b>' + fmt(now, k.unit) + '</b></div><div>' + (k.dir === "down" ? "Goal" : goalWord) + '<b>' + (k.dir === "down" ? "&lt; " : "") + fmt(k.goal, k.unit) + '</b></div></div>' +
+      '<p class="why">' + why + '</p></article>';
+  }
+  var kpiHost = document.getElementById("kpis");
+  function renderKPIs(hit) {
+    kpiHost.innerHTML = KPIS.map(function (k) { return kpiHTML(k, hit && k.id === "reply" ? HIT_REPLY : null); }).join("");
+  }
+
+  /* ---------- target-hit state ---------- */
+  var hitEl = document.getElementById("hit"), sw = document.getElementById("proto-sw");
+  var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function setHit(on, scroll) {
+    hitEl.classList.toggle("on", on);
+    sw.setAttribute("aria-checked", on ? "true" : "false");
+    sw.textContent = on ? "On" : "Off";
+    document.getElementById("sub-reply").textContent = on ? "Done" : "Nearly there";
+    renderKPIs(on);
+    if (on && scroll) {
+      window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      hitEl.focus({ preventScroll: true });
+    }
+  }
+  sw.addEventListener("click", function () { setHit(sw.getAttribute("aria-checked") !== "true", true); });
+
+  /* veil */
+  var next = document.getElementById("next");
+  document.getElementById("lift").addEventListener("click", function () {
+    next.setAttribute("data-veiled", "false");
+    document.getElementById("veil-body").setAttribute("aria-hidden", "false");
+  });
+
+  /* ---------- plan disclosure ---------- */
+  var pt = document.getElementById("plan-toggle"), pp = document.getElementById("plan-panel");
+  pt.addEventListener("click", function () {
+    var open = pt.getAttribute("aria-expanded") !== "true";
+    pt.setAttribute("aria-expanded", open);
+    pp.classList.toggle("open", open);
+    document.getElementById("plan-label").textContent = open ? "Hide the plan" : "Show the plan";
+  });
+
+  /* ---------- tasks with proof ---------- */
+  var tasks = document.querySelectorAll(".task");
+  var WORDS = ["Zero", "One", "Two", "Three"];
+  function updateCount() {
+    var done = document.querySelectorAll(".task.done").length, open = tasks.length - done;
+    document.getElementById("task-count").textContent = open ? WORDS[open] + " open" : "All done";
+    document.getElementById("allset").classList.toggle("on", open === 0);
+  }
+  tasks.forEach(function (t) {
+    var toggle = t.querySelector(".task-cta .btn"), panel = t.querySelector(".proof");
+    var finish = panel.querySelector(".proof-actions .btn"), kind = t.dataset.proof;
+    var input = panel.querySelector("textarea, input[type=file]");
+    var fname = panel.querySelector(".fname");
+    toggle.addEventListener("click", function () {
+      var open = toggle.getAttribute("aria-expanded") !== "true";
+      toggle.setAttribute("aria-expanded", open);
+      panel.classList.toggle("open", open);
+      toggle.textContent = open ? "Close" : "Add proof";
+      if (open) input.focus({ preventScroll: false });
+    });
+    function ready() {
+      return kind === "file" ? input.files && input.files.length > 0 : input.value.trim().length >= 12;
+    }
+    input.addEventListener("input", function () { finish.disabled = !ready(); });
+    input.addEventListener("change", function () {
+      if (kind === "file") { fname.textContent = input.files.length ? input.files[0].name : "No file chosen"; }
+      finish.disabled = !ready();
+    });
+    finish.addEventListener("click", function () {
+      if (!ready()) { return; }
+      var note = t.querySelector(".done-note");
+      var proof = kind === "file" ? "Proof: " + input.files[0].name : "Proof: “" + input.value.trim().slice(0, 140) + (input.value.trim().length > 140 ? "…" : "") + "”";
+      note.textContent = "Done today. " + proof;
+      t.classList.add("done");
+      updateCount();
+    });
+  });
+
+  /* ---------- check-in ---------- */
+  document.querySelectorAll(".chip").forEach(function (c) {
+    c.addEventListener("click", function () {
+      c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") !== "true");
+    });
+  });
+  document.getElementById("checkin").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var b = document.getElementById("send");
+    b.disabled = true; b.textContent = "Sent";
+    document.getElementById("sent").classList.add("on");
+  });
+
+  /* ---------- init ---------- */
+  renderKPIs(false);
+  if (location.hash === "#target-hit" || /[?&]state=hit/.test(location.search)) { setHit(true, false); }
+})();
+</script>
+</body>
+</html>

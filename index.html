@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Alethia Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F1ECDE;--bg-panel:#E7DFC9;--plate-bg:#FBF8EF;--ink:#1B3A57;--ink-soft:#52708A;--accent:#9C6F16;--line:rgba(27,58,87,.32);--line-strong:rgba(27,58,87,.62);--grid-line:rgba(27,58,87,.07)}
+@media (prefers-color-scheme:dark){:root{--bg:#0D2438;--bg-panel:#11314B;--plate-bg:#15364F;--ink:#DDEBF6;--ink-soft:#8EB1CB;--accent:#E7B84C;--line:rgba(221,235,246,.28);--line-strong:rgba(221,235,246,.5);--grid-line:rgba(221,235,246,.06)}}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);background:var(--bg) linear-gradient(var(--grid-line) 1px,transparent 1px) 0 0/34px 34px;background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);font:400 18px/1.6 "Source Serif 4",Georgia,serif}
+main{max-width:900px;margin:0 auto;padding:56px 20px 72px 56px;position:relative}
+main::before{content:"";position:absolute;left:20px;top:0;bottom:0;width:1px;background:var(--line-strong)}
+h1{font:700 clamp(34px,8vw,60px)/1.04 "Space Grotesk",system-ui,sans-serif;letter-spacing:-.02em;margin:0;max-width:14ch}
+.lede{color:var(--ink-soft);margin:16px 0 40px;max-width:54ch}
+.pill{font:500 14px "Space Grotesk",sans-serif;border:1px solid var(--line-strong);border-radius:3px;padding:5px 8px;display:inline-block;margin-bottom:28px}
+a.plate{display:block;position:relative;text-decoration:none;color:inherit;background:var(--plate-bg);border:1px solid var(--line-strong);border-radius:3px;padding:26px 28px;margin:0 0 40px;transition:background .2s}
+a.plate:nth-of-type(2){margin-left:32px}
+a.plate:hover{background:var(--bg-panel)}
+a.plate::before{content:"";position:absolute;top:40px;left:-36px;width:36px;height:1px;background:var(--line-strong)}
+a.plate:nth-of-type(2)::before{left:-68px;width:68px}
+a.plate h2{font:600 26px/1.15 "Space Grotesk",sans-serif;margin:0 0 6px}
+a.plate p{margin:0;color:var(--ink-soft)}
+a.plate span{font:600 15px "Space Grotesk",sans-serif;display:inline-block;margin-top:14px;border-bottom:1px solid var(--ink)}
+a.plate:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.tb{border:1px solid var(--line-strong);border-radius:3px;background:var(--plate-bg);display:grid;grid-template-columns:repeat(3,1fr);font-family:"Space Grotesk",sans-serif}
+.tb div{padding:12px 16px;border-right:1px solid var(--line-strong)}.tb div:last-child{border:0}
+.tb dt{font-size:13px;color:var(--ink-soft)}.tb dd{margin:2px 0 0;font-size:16px;font-weight:500}.tb .h{color:var(--accent)}
+@media(max-width:720px){main{padding:40px 14px 56px 34px}main::before{left:12px}a.plate::before{left:-22px;width:22px}a.plate:nth-of-type(2){margin-left:10px}a.plate:nth-of-type(2)::before{left:-32px;width:32px}.tb{grid-template-columns:1fr}.tb div{border-right:0;border-bottom:1px solid var(--line-strong)}}
+</style>
+</head>
+<body>
+<main>
+  <span class="pill">Alethia, prototypes</span>
+  <h1>Two sheets, one system.</h1>
+  <p class="lede">The business model behind Alethia, and the dashboard a client sees. Both are illustrative and use mock data.</p>
+  <a class="plate" href="business-model.html"><h2>Business model, exploded</h2><p>How Alethia earns, what it costs, and why human review stays outside the coin economy.</p><span>Open the business model</span></a>
+  <a class="plate" href="dashboard.html"><h2>Client dashboard</h2><p>Riverside Bakery Co, week four of 12. Tasks with proof, the plan, the numbers and a weekly check-in.</p><span>Open the dashboard</span></a>
+  <dl class="tb"><div><dt>Drawing</dt><dd>Alethia prototypes</dd></div><div><dt>For</dt><dd class="h">Navid and Morteza</dd></div><div><dt>Status</dt><dd>Illustrative, revision A</dd></div></dl>
+</main>
+</body>
+</html>
