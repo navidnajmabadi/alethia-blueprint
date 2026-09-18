@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Alethia Complete</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F1ECDE; --bg-panel: #E7DFC9; --plate-bg: #FBF8EF;
+  --ink: #1B3A57; --ink-soft: #52708A; --accent: #9C6F16;
+  --line: rgba(27,58,87,0.32); --line-strong: rgba(27,58,87,0.62);
+  --grid-line: rgba(27,58,87,0.07); --pos: #3E7A44; --neg: #A5453A;
+  --head: "Space Grotesk", system-ui, sans-serif;
+  --body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --r: 3px; --ease: cubic-bezier(.22,.8,.3,1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D2438; --bg-panel: #11314B; --plate-bg: #15364F;
+    --ink: #DDEBF6; --ink-soft: #8EB1CB; --accent: #E7B84C;
+    --line: rgba(221,235,246,0.28); --line-strong: rgba(221,235,246,0.5);
+    --grid-line: rgba(221,235,246,0.06); --pos: #6FCB7C; --neg: #E08579;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D2438; --bg-panel: #11314B; --plate-bg: #15364F;
+  --ink: #DDEBF6; --ink-soft: #8EB1CB; --accent: #E7B84C;
+  --line: rgba(221,235,246,0.28); --line-strong: rgba(221,235,246,0.5);
+  --grid-line: rgba(221,235,246,0.06); --pos: #6FCB7C; --neg: #E08579;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+  margin: 0; color: var(--ink); background-color: var(--bg);
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 34px 34px; font: 400 18px/1.6 var(--body); overflow-x: hidden;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure, table { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+a { color: inherit; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: var(--r); }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bg); padding: 10px 14px; z-index: 100; font-family: var(--head); }
+.skip:focus { left: 8px; }
+.hum { color: var(--accent); }
+.num { font-variant-numeric: tabular-nums; }
+.pos { color: var(--pos); } .neg { color: var(--neg); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ---------- nav ---------- */
+.nav { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line-strong); }
+.nav-in { max-width: 1180px; margin: 0 auto; padding: 0 12px 0 20px; display: flex; align-items: center; gap: 10px; }
+.brand { font: 700 17px var(--head); text-decoration: none; padding: 12px 6px 12px 0; flex: none; }
+.nav ul { display: flex; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; gap: 2px; }
+.nav ul::-webkit-scrollbar { display: none; }
+.nav li a { display: flex; align-items: center; gap: 6px; min-height: 46px; padding: 0 10px; font: 500 14px var(--head); text-decoration: none; color: var(--ink-soft); white-space: nowrap; border-bottom: 2px solid transparent; }
+.nav li a b { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--ink); }
+.nav li a:hover { color: var(--ink); }
+.nav li a.on { color: var(--ink); border-bottom-color: var(--ink); }
+.theme { flex: none; min-width: 44px; min-height: 36px; border: 1px solid var(--line-strong); background: transparent; border-radius: var(--r); font: 500 13px var(--head); cursor: pointer; }
+.theme:hover { background: var(--ink); color: var(--plate-bg); }
+
+/* ---------- hero + plates ---------- */
+.hero { max-width: 1180px; margin: 0 auto; padding: 44px 20px 12px 56px; }
+.sheet { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font: 500 14px var(--head); color: var(--ink-soft); }
+.pill { display: inline-flex; align-items: center; font: 500 13px/1 var(--head); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 5px 8px; white-space: nowrap; text-decoration: none; }
+.pill.soft { border-color: var(--line); color: var(--ink-soft); }
+.pill.h { border-color: var(--accent); color: var(--accent); }
+.hero h1 { font: 700 clamp(34px, 6.6vw, 60px)/1.04 var(--head); letter-spacing: -0.02em; margin-top: 22px; max-width: 18ch; }
+.stack { position: relative; max-width: 1180px; margin: 0 auto; padding: 36px 20px 0 56px; --sp: 20px; }
+.stack::before { content: ""; position: absolute; left: var(--sp); top: 0; bottom: 0; width: 1px; background: var(--line-strong); }
+.plate { --ind: 0px; --out: 0px; position: relative; scroll-margin-top: 62px; margin: 0 var(--out) 72px var(--ind); background: var(--plate-bg); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 32px 32px 36px; }
+.plate:nth-of-type(even) { --ind: 32px; }
+.plate:nth-of-type(odd) { --out: 32px; }
+.plate::before { content: ""; position: absolute; top: 44px; height: 1px; background: var(--line-strong); left: calc(-1 * (36px + var(--ind))); width: calc(36px + var(--ind)); }
+.plate::after { content: ""; position: absolute; top: 40px; width: 9px; height: 9px; background: var(--ink); border: 1px solid var(--line-strong); left: calc(-1 * (36px + var(--ind)) - 5px); }
+.ph { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; align-items: baseline; margin-bottom: 24px; }
+.no { font: 600 14px/1 var(--head); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 5px 8px; font-variant-numeric: tabular-nums; }
+.ph h2 { font: 600 clamp(24px, 4.2vw, 34px)/1.15 var(--head); letter-spacing: -0.01em; }
+.ph .sub { grid-column: 2; color: var(--ink-soft); max-width: 66ch; }
+html.js .rv { opacity: 0; transform: translateY(12px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+html.js .rv.in { opacity: 1; transform: none; }
+h3.sh { font: 600 20px/1.2 var(--head); margin: 28px 0 12px; }
+h3.sh:first-child { margin-top: 0; }
+.note { font: 400 14px/1.45 var(--head); color: var(--ink-soft); }
+.lede { font-size: 20px; max-width: 60ch; }
+
+/* ---------- 1 value ---------- */
+.vp { font: 700 clamp(26px, 4.4vw, 42px)/1.12 var(--head); letter-spacing: -0.015em; max-width: 24ch; }
+.moatgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-top: 28px; border: 1px solid var(--line-strong); border-radius: var(--r); overflow: hidden; }
+.moatgrid > div { padding: 20px 22px; }
+.moatgrid > div + div { background: var(--bg-panel); border-left: 1px solid var(--line-strong); }
+.moatgrid h3 { font: 600 19px/1.2 var(--head); }
+.moatgrid li { padding: 8px 0 8px 18px; position: relative; border-top: 1px solid var(--line); margin-top: 8px; font-size: 17px; }
+.moatgrid li::before { content: ""; position: absolute; left: 0; top: 17px; width: 7px; height: 7px; border: 1px solid var(--ink); }
+.moatgrid li.hum::before { background: var(--accent); border-color: var(--accent); }
+.moatline { margin-top: 24px; font-size: 20px; max-width: 62ch; }
+.moatline b { font: 600 20px var(--head); }
+
+/* ---------- 2 canvas ---------- */
+.bmc { position: relative; display: grid; grid-template-columns: repeat(10, 1fr); gap: 26px 20px; }
+.bmc svg.cx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.bmc .cl { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 4 5; }
+.blk { position: relative; z-index: 1; background: var(--bg-panel); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 16px 16px 18px; transform: translateY(var(--dy, 0)); }
+.blk h3 { font: 600 16px/1.2 var(--head); display: flex; align-items: center; gap: 8px; }
+.blk h3 i { font: 600 12px var(--head); font-style: normal; border: 1px solid var(--line-strong); border-radius: var(--r); padding: 2px 6px; }
+.blk li { position: relative; padding: 6px 0 6px 14px; border-top: 1px solid var(--line); margin-top: 6px; font-size: 15.5px; line-height: 1.4; }
+.blk li::before { content: ""; position: absolute; left: 0; top: 14px; width: 6px; height: 6px; border: 1px solid var(--ink); }
+.blk li.hum::before { background: var(--accent); border-color: var(--accent); }
+.blk .grp { font: 500 13px var(--head); color: var(--ink-soft); margin-top: 10px; }
+.b-kp { grid-column: 1 / 3; grid-row: 1 / 3; --dy: 0px; }
+.b-ka { grid-column: 3 / 5; grid-row: 1; --dy: -8px; }
+.b-kr { grid-column: 3 / 5; grid-row: 2; --dy: 8px; }
+.b-vp { grid-column: 5 / 7; grid-row: 1 / 3; background: var(--plate-bg); border-width: 1.5px; --dy: 0px; }
+.b-cr { grid-column: 7 / 9; grid-row: 1; --dy: -8px; }
+.b-ch { grid-column: 7 / 9; grid-row: 2; --dy: 8px; }
+.b-cs { grid-column: 9 / 11; grid-row: 1 / 3; --dy: 0px; }
+.b-co { grid-column: 1 / 6; grid-row: 3; }
+.b-rs { grid-column: 6 / 11; grid-row: 3; }
+.b-vp .core { display: grid; place-items: center; width: 74px; height: 74px; margin: 6px auto 12px; border: 1.5px solid var(--ink); font: 700 15px var(--head); background: var(--bg-panel); clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%); }
+.b-vp p { font-size: 16px; }
+
+/* ---------- 3 future + margin ---------- */
+.future { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.fut { border: 1.5px dashed var(--line-strong); border-radius: var(--r); padding: 16px 16px 18px; }
+.fut h4 { font: 600 17px/1.2 var(--head); margin: 8px 0 6px; }
+.fut p { font-size: 15.5px; color: var(--ink-soft); line-height: 1.45; }
+.eqbox { margin-top: 28px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg-panel); padding: 22px 24px; }
+.eq { font: 500 clamp(17px, 2.6vw, 24px)/1.5 var(--head); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.eq + .eq { margin-top: 12px; }
+.frac { display: inline-flex; flex-direction: column; align-items: center; }
+.frac span:first-child { padding: 0 8px 4px; border-bottom: 1.5px solid var(--ink); }
+.frac span:last-child { padding-top: 4px; }
+.eq .lbl { font-weight: 700; }
+.eq .approx { color: var(--ink-soft); }
+.livebar { display: flex; flex-wrap: wrap; gap: 8px 28px; margin-top: 16px; font: 500 15px var(--head); color: var(--ink-soft); }
+.livebar b { color: var(--ink); font-weight: 600; }
+
+/* ---------- charts ---------- */
+.chart { width: 100%; position: relative; }
+.chart svg { display: block; width: 100%; overflow: visible; }
+.chart .gl { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+.chart .ax { stroke: var(--line-strong); stroke-width: 1; }
+.chart .tk { font: 500 12px var(--head); fill: var(--ink-soft); }
+.chart .ln { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.chart .ln.ink { stroke: var(--ink); } .chart .ln.soft { stroke: var(--ink-soft); } .chart .ln.acc { stroke: var(--accent); } .chart .ln.pos { stroke: var(--pos); } .chart .ln.neg { stroke: var(--neg); }
+.chart .ar { opacity: .08; } .chart .ar.ink { fill: var(--ink); } .chart .ar.acc { fill: var(--accent); } .chart .ar.pos { fill: var(--pos); }
+.chart .mk { fill: var(--plate-bg); stroke: var(--ink); stroke-width: 2.2; }
+.chart .mk.acc { stroke: var(--accent); } .chart .mk.pos { stroke: var(--pos); } .chart .mk.neg { stroke: var(--neg); }
+.chart .ml { font: 600 12.5px var(--head); fill: var(--ink); }
+.chart .ml.acc { fill: var(--accent); }
+.chart .vl { stroke: var(--ink-soft); stroke-width: 1.2; stroke-dasharray: 5 4; }
+.chart .vl.acc { stroke: var(--accent); } .chart .vl.neg { stroke: var(--neg); } .chart .vl.pos { stroke: var(--pos); }
+.chart .bar.pos { fill: var(--pos); opacity: .78; } .chart .bar.neg { fill: var(--neg); opacity: .78; }
+.chart .curve { fill: none; stroke: var(--ink); stroke-width: 2; }
+.lgd { display: flex; flex-wrap: wrap; gap: 6px 20px; margin-top: 8px; font: 500 14px var(--head); }
+.lgd span { display: inline-flex; align-items: center; gap: 8px; }
+.lgd i { width: 22px; height: 3px; display: inline-block; background: var(--ink); }
+.lgd i.soft { background: var(--ink-soft); } .lgd i.acc { background: var(--accent); } .lgd i.pos { background: var(--pos); } .lgd i.neg { background: var(--neg); }
+.lgd i.dash { background: repeating-linear-gradient(90deg, var(--ink-soft) 0 5px, transparent 5px 9px); }
+.figure { border: 1px solid var(--line); border-radius: var(--r); background: var(--bg); padding: 14px 12px 12px; margin-top: 18px; }
+.figure .cap { font: 500 14px var(--head); color: var(--ink-soft); margin-bottom: 6px; }
+
+/* ---------- calculator ---------- */
+.calc { border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg-panel); padding: 20px 22px 8px; margin-bottom: 8px; }
+.calc h4 { font: 600 16px var(--head); margin: 0 0 6px; }
+.ctls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 32px; }
+.ctl { display: grid; grid-template-columns: 1fr auto; gap: 0 8px; align-items: center; padding: 4px 0 8px; }
+.ctl label { font: 500 14.5px/1.3 var(--head); grid-column: 1 / -1; }
+.ctl input[type=range] { grid-column: 1; }
+.ctl .nw { display: flex; align-items: center; gap: 4px; }
+.ctl input[type=number] { width: 84px; min-height: 36px; padding: 4px 6px; border: 1px solid var(--line-strong); background: var(--plate-bg); border-radius: var(--r); font: 500 15px var(--head); text-align: right; font-variant-numeric: tabular-nums; }
+.ctl .u { font: 400 13px var(--head); color: var(--ink-soft); min-width: 18px; }
+input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 34px; background: transparent; margin: 0; cursor: pointer; }
+input[type=range]::-webkit-slider-runnable-track { height: 2px; background: var(--line-strong); }
+input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; margin-top: -8px; background: var(--plate-bg); border: 2px solid var(--ink); border-radius: var(--r); }
+input[type=range]::-moz-range-track { height: 2px; background: var(--line-strong); }
+input[type=range]::-moz-range-thumb { width: 14px; height: 14px; background: var(--plate-bg); border: 2px solid var(--ink); border-radius: var(--r); }
+.tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 22px 0 6px; }
+.tile { border: 1px solid var(--line-strong); border-radius: var(--r); padding: 12px 14px; background: var(--plate-bg); }
+.tile dt { font: 400 13px var(--head); color: var(--ink-soft); }
+.tile dd { font: 700 26px/1.15 var(--head); margin-top: 4px; font-variant-numeric: tabular-nums; }
+.tile dd small { font: 500 13px var(--head); color: var(--ink-soft); display: block; margin-top: 2px; }
+.tblwrap { overflow-x: auto; margin-top: 18px; border: 1px solid var(--line-strong); border-radius: var(--r); }
+table.fin { width: 100%; border-collapse: collapse; font: 500 15px var(--head); font-variant-numeric: tabular-nums; min-width: 640px; background: var(--plate-bg); }
+table.fin th, table.fin td { padding: 10px 12px; text-align: right; border-bottom: 1px solid var(--line); }
+table.fin th:first-child, table.fin td:first-child { text-align: left; }
+table.fin thead th { font-weight: 600; background: var(--bg-panel); border-bottom: 1px solid var(--line-strong); font-size: 13.5px; }
+table.fin tr.low td { background-image: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 7px); }
+table.fin td.zero { font-weight: 700; }
+table.fin td .tag { display: inline-block; margin-left: 6px; font: 600 11.5px var(--head); border: 1px solid var(--ink); border-radius: var(--r); padding: 1px 5px; }
+table.fin tr.tot td { font-weight: 700; border-top: 1.5px solid var(--line-strong); }
+.free { margin-top: 14px; font: 500 15px/1.5 var(--head); border-left: 3px solid var(--ink); padding: 4px 0 4px 12px; }
+.tiers3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 8px; }
+.tier { border: 1px solid var(--line-strong); border-radius: var(--r); padding: 16px; }
+.tier h4 { font: 600 20px var(--head); }
+.tier .big { font: 700 30px/1.1 var(--head); margin: 6px 0 4px; }
+.tier p { font-size: 15.5px; color: var(--ink-soft); line-height: 1.45; }
+.tier.low { border-style: dashed; background-image: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 8px); }
+
+/* ---------- 5 tools ---------- */
+.tcols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.tcol h3 { font: 600 20px/1.2 var(--head); }
+.tcol .when { font: 500 14px var(--head); color: var(--ink-soft); margin: 2px 0 12px; }
+.tool { position: relative; margin-top: 10px; padding: 11px 12px 11px 16px; font: 500 15.5px/1.3 var(--head); background: var(--plate-bg); display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+.tool small { grid-column: 1 / -1; font: 500 12.5px var(--head); color: var(--ink-soft); }
+.tool.ppu { border: 1px solid var(--line-strong); border-left: 6px solid var(--ink); }
+.tool.sub { border: 1.5px solid var(--ink); outline: 1px solid var(--line-strong); outline-offset: 3px; margin-left: 4px; margin-right: 4px; background-image: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 8px); border-left: 1.5px solid var(--ink); }
+.ico { width: 26px; height: 26px; }
+.tool .ico { stroke: var(--ink); fill: none; stroke-width: 1.8; }
+.tkey { display: flex; flex-wrap: wrap; gap: 12px 30px; margin-bottom: 22px; padding: 14px 16px; border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg-panel); font: 500 15px var(--head); }
+.tkey > div { display: flex; align-items: center; gap: 12px; }
+.tkey .sample { width: 54px; height: 30px; background: var(--plate-bg); }
+.tkey .sample.ppu { border: 1px solid var(--line-strong); border-left: 6px solid var(--ink); }
+.tkey .sample.sub { border: 1.5px solid var(--ink); outline: 1px solid var(--line-strong); outline-offset: 3px; background-image: repeating-linear-gradient(135deg, var(--line) 0 1px, transparent 1px 8px); margin: 0 4px; }
+
+/* ---------- 6 / 7 ---------- */
+.who { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-bottom: 18px; }
+.who .tier .big { font-size: 26px; }
+.opt { margin-top: 14px; font: 500 16px/1.5 var(--head); border-left: 3px solid var(--accent); padding: 4px 0 4px 12px; }
+.mcstats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+
+/* ---------- 8 dashboard ---------- */
+.dash { border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--bg); padding: 22px; }
+.dh { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 16px; padding-bottom: 14px; border-bottom: 1px solid var(--line-strong); }
+.dh h3 { font: 700 24px var(--head); }
+.dgrid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 22px; margin-top: 18px; }
+.dcard { border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--plate-bg); padding: 16px 18px 18px; }
+.dcard h4 { font: 600 17px var(--head); margin-bottom: 8px; }
+.tk-row { display: grid; grid-template-columns: 22px 1fr; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+.tk-row:first-of-type { border-top: 0; }
+.tk-row .bx { width: 20px; height: 20px; border: 1.5px solid var(--ink); border-radius: var(--r); margin-top: 3px; }
+.tk-row b { font: 500 16px/1.35 var(--head); display: block; }
+.tk-row span { font: 400 13.5px var(--head); color: var(--ink-soft); }
+.tk-row span .hum { font-weight: 600; }
+.tk-row .btn { margin-top: 6px; min-height: 36px; padding: 4px 12px; border: 1px solid var(--ink); background: transparent; border-radius: var(--r); font: 500 14px var(--head); cursor: pointer; }
+.tk-row .btn:hover { background: var(--ink); color: var(--plate-bg); }
+.kcards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+.kc .v { font: 700 28px/1.1 var(--head); font-variant-numeric: tabular-nums; }
+.kc .d { font: 500 13.5px var(--head); color: var(--ink-soft); margin-top: 2px; }
+.kc .d b { color: var(--pos); font-weight: 700; }
+.cohort { display: inline-flex; gap: 6px; align-items: center; font: 500 13px var(--head); border: 1px solid var(--line-strong); border-radius: var(--r); padding: 4px 8px; margin-bottom: 8px; }
+.lb li { display: grid; grid-template-columns: 26px 1fr 54px; gap: 8px; align-items: center; padding: 8px 0; border-top: 1px solid var(--line); font: 500 14.5px/1.25 var(--head); }
+.lb li .bar { height: 6px; background: var(--ink-soft); margin-top: 5px; border-radius: 1px; }
+.lb li.me { background: var(--bg-panel); border: 1.5px solid var(--ink); border-radius: var(--r); padding: 8px 8px; margin: 4px 0; }
+.lb li.me .bar { background: var(--ink); }
+.lb li.gap { display: block; text-align: center; color: var(--ink-soft); font-weight: 400; padding: 4px 0; }
+.lb .rk { font-weight: 700; font-variant-numeric: tabular-nums; }
+.lb .pc { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pct { margin-top: 12px; font: 600 16px/1.4 var(--head); border: 1px solid var(--ink); border-radius: var(--r); padding: 10px 12px; }
+
+/* ---------- 9 core value ---------- */
+.core { padding: 64px 0; text-align: left; }
+.core p.big { font: 700 clamp(30px, 6vw, 60px)/1.1 var(--head); letter-spacing: -0.02em; max-width: 20ch; }
+.core p.big u { text-decoration-thickness: .07em; text-underline-offset: .12em; }
+.core .note { margin-top: 22px; max-width: 56ch; }
+.plate.moment { border-width: 1.5px; }
+
+/* ---------- 10 team ---------- */
+.team { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.person { border: 1px solid var(--accent); border-radius: var(--r); padding: 18px 20px; background: var(--plate-bg); }
+.person h4 { font: 600 20px var(--head); color: var(--accent); }
+.person p { font-size: 16px; margin-top: 6px; }
+.person .pill { margin-top: 10px; }
+.consult { margin-top: 16px; border: 1.5px solid var(--accent); border-radius: var(--r); padding: 16px 20px; display: grid; grid-template-columns: 1fr auto; gap: 8px 20px; align-items: center; background-image: repeating-linear-gradient(90deg, transparent 0 11px, var(--line) 11px 12px); }
+.consult h4 { font: 600 20px var(--head); }
+.consult p { font-size: 16px; }
+.consult .fee { font: 700 20px var(--head); color: var(--accent); text-align: right; }
+.be { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center; margin-top: 28px; }
+.be .m { font: 700 clamp(44px, 8vw, 84px)/1 var(--head); font-variant-numeric: tabular-nums; }
+.be .m small { font: 500 16px var(--head); color: var(--ink-soft); display: block; margin-top: 6px; }
+.be p { font: 400 16.5px/1.5 var(--body); }
+
+/* ---------- 11 marketing ---------- */
+.mk-out { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+
+/* ---------- footer ---------- */
+.tbw { max-width: 1180px; margin: 0 auto; padding: 0 20px 80px 56px; }
+.tb { border: 1px solid var(--line-strong); border-radius: var(--r); background: var(--plate-bg); display: grid; grid-template-columns: repeat(3, 1fr); }
+.tb > div { padding: 14px 18px 16px; border-right: 1px solid var(--line-strong); }
+.tb > div:last-child { border-right: 0; }
+.tb dt { font: 400 13px var(--head); color: var(--ink-soft); }
+.tb dd { font: 500 17px/1.3 var(--head); margin-top: 4px; }
+
+/* ---------- responsive ---------- */
+@media (max-width: 980px) {
+  .bmc { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .bmc svg.cx { display: none; }
+  .blk, .b-kp, .b-ka, .b-kr, .b-vp, .b-cr, .b-ch, .b-cs, .b-co, .b-rs { grid-column: auto; grid-row: auto; --dy: 0px; }
+  .b-vp { grid-column: 1 / -1; order: -1; }
+  .b-co, .b-rs { grid-column: 1 / -1; }
+  .future { grid-template-columns: 1fr 1fr; }
+  .tiles { grid-template-columns: 1fr 1fr; }
+  .tcols { grid-template-columns: 1fr; }
+  .dgrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 720px) {
+  body { font-size: 17px; }
+  .nav-in { padding-left: 12px; }
+  .brand { display: none; }
+  .nav li a span { display: none; }
+  .nav li a { padding: 0 11px; }
+  .hero { padding: 32px 14px 8px 34px; }
+  .stack { padding: 28px 14px 0 34px; --sp: 12px; }
+  .plate { padding: 22px 14px 26px; margin-bottom: 52px; }
+  .plate:nth-of-type(even) { --ind: 10px; --out: 0px; }
+  .plate:nth-of-type(odd) { --out: 10px; }
+  .plate::before { left: calc(-1 * (22px + var(--ind))); width: calc(22px + var(--ind)); top: 32px; }
+  .plate::after { left: calc(-1 * (22px + var(--ind)) - 5px); top: 28px; }
+  .ph { grid-template-columns: 1fr; } .ph .sub { grid-column: 1; } .no { justify-self: start; }
+  .moatgrid { grid-template-columns: 1fr; }
+  .moatgrid > div + div { border-left: 0; border-top: 1px solid var(--line-strong); }
+  .bmc { grid-template-columns: 1fr; }
+  .future { grid-template-columns: 1fr; }
+  .ctls { grid-template-columns: 1fr; }
+  .calc { padding: 16px 14px 6px; }
+  .tiles { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .tile dd { font-size: 21px; }
+  .tiers3, .who, .mcstats, .mk-out, .team, .kcards { grid-template-columns: 1fr; }
+  .consult { grid-template-columns: 1fr; } .consult .fee { text-align: left; }
+  .be { grid-template-columns: 1fr; gap: 10px; }
+  .tb { grid-template-columns: 1fr; }
+  .tb > div { border-right: 0; border-bottom: 1px solid var(--line-strong); } .tb > div:last-child { border-bottom: 0; }
+  .tbw { padding: 0 14px 56px 34px; }
+  .core { padding: 36px 0; }
+  .dash { padding: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  html.js .rv { opacity: 1 !important; transform: none !important; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#s1">Skip to section 1</a>
+
+<nav class="nav" aria-label="Sections">
+  <div class="nav-in">
+    <a class="brand" href="#top">Alethia</a>
+    <ul id="navlist">
+      <li><a href="#s1"><b>1</b><span>Value</span></a></li>
+      <li><a href="#s2"><b>2</b><span>Canvas</span></a></li>
+      <li><a href="#s3"><b>3</b><span>Margin</span></a></li>
+      <li><a href="#s4"><b>4</b><span>Calculator</span></a></li>
+      <li><a href="#s5"><b>5</b><span>Tools</span></a></li>
+      <li><a href="#s6"><b>6</b><span>Pricing</span></a></li>
+      <li><a href="#s7"><b>7</b><span>Uncertainty</span></a></li>
+      <li><a href="#s8"><b>8</b><span>Dashboard</span></a></li>
+      <li><a href="#s9"><b>9</b><span>Core value</span></a></li>
+      <li><a href="#s10"><b>10</b><span>Team</span></a></li>
+      <li><a href="#s11"><b>11</b><span>Marketing</span></a></li>
+    </ul>
+    <button class="theme" id="themeBtn" type="button" aria-label="Switch light and dark mode">Theme</button>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="sheet"><span class="pill soft">Complete sheet</span><span>Alethia, business model, calculator and product in one document</span></div>
+  <h1>Truth revealed, one constraint at a time.</h1>
+</header>
+
+<main class="stack">
+
+<!-- 1 -->
+<section class="plate rv" id="s1" aria-labelledby="t1">
+  <header class="ph"><span class="no">1</span><h2 id="t1">Value proposition and moat</h2><p class="sub">What Alethia promises, and why it cannot be copied.</p></header>
+  <p class="vp">Alethia tells a small business exactly what is holding revenue back, then stays until it is fixed.</p>
+  <p class="lede" style="margin-top:16px">It diagnoses the business into one of twelve constraint profiles, then runs the engagement: a plan, KPI tracking, weekly AI mentoring and a tool library, paid for with Coin.</p>
+  <div class="moatgrid">
+    <div><h3>What a competitor can copy</h3><ul><li>The interface and screens</li><li>The look of a diagnostic report</li><li>A generic AI prompt</li></ul></div>
+    <div><h3>What they cannot</h3><ul><li class="hum">Two years of human-reviewed, corrected cases</li><li>A playbook library per profile, sharpened by each correction</li><li>Case history tied to real KPI movement</li></ul></div>
+  </div>
+  <p class="moatline"><b>The moat is the playbook library, not the interface.</b> Every human-reviewed case makes the diagnostic sharper. Any competitor can copy a UI. Nobody can copy two years of corrected cases.</p>
+  <div class="figure"><p class="cap">Illustrative shape, not measured: diagnostic accuracy as reviewed cases accumulate</p><div class="chart" id="ch-moat" role="img" aria-label="Illustrative chart: with human review, accuracy climbs steadily as reviewed cases grow. A copied interface with no case history stays flat."></div></div>
+</section>
+
+<!-- 2 -->
+<section class="plate rv" id="s2" aria-labelledby="t2">
+  <header class="ph"><span class="no">2</span><h2 id="t2">Business Model Canvas</h2><p class="sub">Nine blocks, pulled apart around the value proposition.</p></header>
+  <div class="bmc" id="bmc">
+    <svg class="cx" id="bmcsvg" aria-hidden="true"></svg>
+    <div class="blk b-kp"><h3><i>1</i>Key Partners</h3><ul><li>Payment processor</li><li>CRM and accounting integration partners</li><li>Parent consulting firm, as a distribution channel</li></ul></div>
+    <div class="blk b-ka"><h3><i>2</i>Key Activities</h3><ul><li>Run diagnostics</li><li>Maintain the AI reasoning layer</li><li>Plan generation</li><li>Weekly mentoring</li><li>Material curation</li></ul></div>
+    <div class="blk b-kr"><h3><i>3</i>Key Resources</h3><ul><li>The playbook IP</li><li>The diagnostic engine</li><li class="hum">The two founders' consulting expertise</li><li>Accumulated case history</li></ul></div>
+    <div class="blk b-vp"><h3><i>4</i>Value Proposition</h3><div class="core">Alethia</div><p>Tells a small business exactly what is holding revenue back, then stays until it is fixed. Diagnosis into one of twelve profiles, a plan, KPI tracking, weekly AI mentoring, and a tool library paid with Coin.</p></div>
+    <div class="blk b-cr"><h3><i>5</i>Customer Relationships</h3><ul><li>Self-serve, for Low</li><li>AI-mentored, for Mid</li><li class="hum">Optional paid human session, for High</li></ul></div>
+    <div class="blk b-ch"><h3><i>6</i>Channels</h3><ul><li>Content marketing</li><li>Referral program</li><li>Existing consulting client base</li></ul></div>
+    <div class="blk b-cs"><h3><i>7</i>Customer Segments</h3><ul><li>Small business owners, all types</li><li>Segmented by engagement tier: Low, Mid, High</li></ul></div>
+    <div class="blk b-co"><h3><i>8</i>Cost Structure</h3><p class="grp">Fixed</p><ul><li>Salaries</li><li>Infrastructure</li></ul><p class="grp">Variable</p><ul><li>Coin cost to serve</li><li>Payment processing</li></ul></div>
+    <div class="blk b-rs"><h3><i>9</i>Revenue Streams</h3><ul><li>Coin sales</li><li>Tool subscriptions</li><li>One-time tool purchases</li><li class="hum">Paid human sessions</li></ul></div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="plate rv" id="s3" aria-labelledby="t3">
+  <header class="ph"><span class="no">3</span><h2 id="t3">Future activities, margin formula, scale point</h2><p class="sub">What comes after the core, and the arithmetic that decides when it pays.</p></header>
+  <h3 class="sh">Future activities</h3>
+  <div class="future">
+    <div class="fut"><span class="pill soft">Future</span><h4>Partner network</h4><p>Consultants and agencies bring their own clients onto the platform.</p></div>
+    <div class="fut"><span class="pill soft">Future</span><h4>Vertical playbook packs</h4><p>Profile playbooks tuned to one industry at a time.</p></div>
+    <div class="fut"><span class="pill soft">Future</span><h4>Third-party tool marketplace</h4><p>Outside builders sell tools inside the Coin economy.</p></div>
+    <div class="fut"><span class="pill soft">Future</span><h4>White-label licensing</h4><p>Other firms run the diagnostic under their own name.</p></div>
+  </div>
+  <h3 class="sh">Margin formula</h3>
+  <div class="eqbox">
+    <div class="eq"><span class="lbl">Margin</span><span>=</span><span class="frac"><span>Revenue &#8722; Variable Cost &#8722; Fixed Cost</span><span>Revenue</span></span></div>
+    <div class="eq"><span class="lbl">Variable Cost</span><span class="approx">&#8776;</span><span>Coins Used &#215; Coin Cost to Serve</span></div>
+    <div class="livebar" aria-live="polite"><span>At month <b id="m3-month">12</b>: margin <b id="m3-margin">n/a</b></span><span>Revenue <b id="m3-rev">$0</b></span><span>Variable cost <b id="m3-var">$0</b></span><span>Fixed cost <b id="m3-fix">$0</b></span></div>
+  </div>
+  <h3 class="sh">The scale point</h3>
+  <p class="lede" style="font-size:18px">The scale point is the month Mid and High Coin revenue first covers fixed cost. Past it, serving one more Coin costs <b id="m3-cost">0.4&#162;</b> and sells for <b id="m3-price">5.0&#162;</b>, so each Coin earns about <b id="m3-ratio">12&#215;</b> its cost.</p>
+  <div class="figure"><p class="cap">Mid and High Coin revenue against fixed cost, 24 months (live from the calculator in section 4)</p><div class="chart" id="ch-scale" role="img" aria-label="Line chart of monthly Mid and High Coin revenue against fixed cost, with the scale point marked."></div></div>
+  <p class="note" style="margin-top:10px" id="m3-scalenote"></p>
+</section>
+
+<!-- 4 -->
+<section class="plate rv" id="s4" aria-labelledby="t4">
+  <header class="ph"><span class="no">4</span><h2 id="t4">Coin economy calculator</h2><p class="sub">A live model. Every input is a slider or number field, and everything recomputes as you move it. Sections 6, 7, 10 and 11 read from the same model.</p></header>
+  <div class="calc">
+    <h4>Funnel, 24 months</h4>
+    <div class="ctls" data-grp="funnel"></div>
+  </div>
+  <div class="calc">
+    <h4>Coin usage, price and fixed cost</h4>
+    <div class="ctls" data-grp="econ"></div>
+  </div>
+  <h3 class="sh">Projection</h3>
+  <div class="figure"><p class="cap">Active users by tier, month by month</p><div class="chart" id="ch-funnel" role="img" aria-label="Line chart of Low, Mid and High users over 24 months."></div></div>
+  <h3 class="sh">Financials at month <span id="o-month">12</span></h3>
+  <dl class="tiles" aria-live="polite">
+    <div class="tile"><dt>Revenue</dt><dd id="o-rev">$0</dd></div>
+    <div class="tile"><dt>Variable cost</dt><dd id="o-var">$0</dd></div>
+    <div class="tile"><dt>Free liability (Low)</dt><dd id="o-free">$0</dd></div>
+    <div class="tile"><dt>Net profit</dt><dd id="o-net">$0</dd></div>
+  </dl>
+  <div class="tblwrap"><table class="fin" aria-label="Financials by tier at the selected month">
+    <thead><tr><th>Tier</th><th>Users</th><th>Coins per user</th><th>Coins used</th><th>Revenue</th><th>Variable cost</th><th>Contribution</th></tr></thead>
+    <tbody id="fin-body"></tbody>
+  </table></div>
+  <p class="free" id="o-freenote"></p>
+</section>
+
+<!-- 5 -->
+<section class="plate rv" id="s5" aria-labelledby="t5">
+  <header class="ph"><span class="no">5</span><h2 id="t5">Tools catalog</h2><p class="sub">Three levels, rolled out over time. Each tool is paid per use or by subscription.</p></header>
+  <div class="tkey" role="group" aria-label="Key">
+    <div><span class="sample ppu"></span><span><b>Pay-per-use.</b> A one-shot tool. Run it, pay Coin, done.</span></div>
+    <div><span class="sample sub"></span><span><b>Subscription.</b> Runs continuously and keeps watching.</span></div>
+  </div>
+  <div class="tcols" id="tcols"></div>
+</section>
+
+<!-- 6 -->
+<section class="plate rv" id="s6" aria-labelledby="t6">
+  <header class="ph"><span class="no">6</span><h2 id="t6">Coin pricing, and who pays</h2><p class="sub">Low never pays. Coin price only moves Mid and High, so that is where elasticity lives.</p></header>
+  <div class="who">
+    <div class="tier low"><h4>Low</h4><p class="big">$0 revenue</p><p>Never pays. Earns Coin through referrals only. Price inelastic by definition.</p></div>
+    <div class="tier"><h4>Mid and High</h4><p class="big">Buy Coin</p><p>Their effective usage falls as price rises: usage = base usage &#215; (base price / price)<sup>elasticity</sup>.</p></div>
+  </div>
+  <div class="calc"><h4>Elasticity</h4><div class="ctls" data-grp="elast"></div></div>
+  <h3 class="sh">Price sweep</h3>
+  <div class="figure"><p class="cap">Net profit at the selected month across a range of Coin prices</p><div class="chart" id="ch-sweep" role="img" aria-label="Line chart of net profit against Coin price with the profit-maximizing price marked."></div></div>
+  <p class="opt" id="o-opt" aria-live="polite"></p>
+</section>
+
+<!-- 7 -->
+<section class="plate rv" id="s7" aria-labelledby="t7">
+  <header class="ph"><span class="no">7</span><h2 id="t7">Uncertainty: Monte Carlo</h2><p class="sub">Tier populations and per-user Coin usage are drawn from normal distributions around the current values, then net profit is computed for each run.</p></header>
+  <div class="calc"><h4>Simulation</h4><div class="ctls" data-grp="mc"></div></div>
+  <div class="figure"><p class="cap">Distribution of net profit at the selected month</p><div class="chart" id="ch-mc" role="img" aria-label="Histogram of simulated net profit with a fitted bell curve."></div></div>
+  <dl class="tiles mcstats" aria-live="polite">
+    <div class="tile"><dt>Mean net profit</dt><dd id="mc-mean">$0</dd></div>
+    <div class="tile"><dt>Standard deviation</dt><dd id="mc-sd">$0</dd></div>
+    <div class="tile"><dt>Probability of a profitable month</dt><dd id="mc-p">0%</dd></div>
+  </dl>
+  <p class="note" style="margin-top:10px" id="mc-note"></p>
+</section>
+
+<!-- 8 -->
+<section class="plate rv" id="s8" aria-labelledby="t8">
+  <header class="ph"><span class="no">8</span><h2 id="t8">Sample client dashboard, with leaderboard</h2><p class="sub">What one owner sees. The leaderboard ranks percent improvement since diagnosis, never absolute revenue.</p></header>
+  <div class="dash">
+    <div class="dh"><h3>Riverside Bakery Co</h3><span class="pill soft">Week four of 12</span></div>
+    <div class="dgrid">
+      <div class="dcard"><h4>This week</h4>
+        <div class="tk-row"><i class="bx"></i><div><b>Follow up on every quote unanswered for two days</b><span>Owner: <span class="hum">You</span> &middot; Due Sunday</span><br><button class="btn" type="button">Add proof</button></div></div>
+        <div class="tk-row"><i class="bx"></i><div><b>Turn on guest checkout for preorders</b><span>Owner: <span class="hum">Theo, web helper</span> &middot; Due Tuesday</span><br><button class="btn" type="button">Upload screenshot</button></div></div>
+        <div class="tk-row"><i class="bx"></i><div><b>Call the three quiet catering leads</b><span>Owner: <span class="hum">You</span> &middot; Due Friday</span><br><button class="btn" type="button">Describe what changed</button></div></div>
+      </div>
+      <div class="dcard"><h4>Leaderboard</h4>
+        <span class="cohort">Cohort: started with a conversion constraint</span>
+        <ol class="lb" id="lb"></ol>
+        <p class="pct" id="lb-pct" aria-live="polite"></p>
+      </div>
+    </div>
+    <div class="kcards">
+      <div class="dcard kc"><h4>Monthly revenue</h4><div class="v">$24,100</div><div class="d">Baseline $18,400 at diagnosis <b>+31%</b></div><div class="chart" id="ch-k1" role="img" aria-label="Sparkline of monthly revenue rising from 18,400 to 24,100."></div></div>
+      <div class="dcard kc"><h4>Quote-to-order rate</h4><div class="v">31%</div><div class="d">Baseline 18%, target 40% <b>+72%</b></div><div class="chart" id="ch-k2" role="img" aria-label="Sparkline of quote-to-order rate rising from 18 to 31 percent."></div></div>
+    </div>
+  </div>
+  <p class="note" style="margin-top:10px">Leaderboard entries are anonymized by industry, region and month. The measure is each business's own percent improvement against the baseline captured at diagnosis.</p>
+</section>
+
+<!-- 9 -->
+<section class="plate moment rv" id="s9" aria-labelledby="t9">
+  <header class="ph"><span class="no">9</span><h2 id="t9">Core value</h2></header>
+  <div class="core">
+    <p class="big" id="t9b">Every business owner on Alethia makes more money than they did before they started. <u>Measured on their own numbers.</u></p>
+    <p class="note">The baseline is captured at diagnosis. Progress is reported against it, not against anyone else.</p>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="plate rv" id="s10" aria-labelledby="t10">
+  <header class="ph"><span class="no">10</span><h2 id="t10">Team and break-even</h2><p class="sub">Self-funded by design. Both salaries are inside fixed cost, so nothing is called profit until they are covered.</p></header>
+  <div class="team">
+    <div class="person"><h4>Strategy lead, CEO</h4><p>Owns the diagnostic method, the playbooks and the client relationships.</p><span class="pill h">Draws a salary</span></div>
+    <div class="person"><h4>Technical lead, CTO</h4><p>Owns the AI reasoning layer, the platform and the data.</p><span class="pill h">Draws a salary</span></div>
+  </div>
+  <div class="consult"><div><span class="pill h">Human time</span><h4 style="margin-top:8px">Consultation Session</h4><p>A paid tool for direct time with a founder. A flat fee, not a Coin price, and deliberately outside the automated Coin economy.</p></div><div class="fee">Flat fee</div></div>
+  <div class="be">
+    <div class="m" id="be-m" aria-live="polite">Month 16<small>net profit crosses zero</small></div>
+    <p id="be-p"></p>
+  </div>
+  <div class="figure"><p class="cap">Net profit by month at current settings (from section 4)</p><div class="chart" id="ch-net" role="img" aria-label="Line chart of monthly net profit with the zero line and the break-even month marked."></div></div>
+</section>
+
+<!-- 11 -->
+<section class="plate rv" id="s11" aria-labelledby="t11">
+  <header class="ph"><span class="no">11</span><h2 id="t11">Marketing approach</h2><p class="sub">Spend follows proven revenue. No budget is committed ahead of proof.</p></header>
+  <div class="calc"><h4>Marketing spend</h4><div class="ctls" data-grp="mkt"></div></div>
+  <p class="lede" style="font-size:18px;margin-top:14px">Marketing is a percentage of Mid and High Coin revenue. In a month with no revenue, the spend is zero. As revenue is proven, spend scales with it.</p>
+  <div class="tblwrap"><table class="fin" aria-label="Marketing spend by month" style="min-width:520px">
+    <thead><tr><th>Month</th><th>Mid and High Coin revenue</th><th>Marketing spend</th><th>Net profit after marketing</th></tr></thead>
+    <tbody id="mk-body"></tbody>
+  </table></div>
+  <dl class="tiles mk-out" aria-live="polite"><div class="tile"><dt>Spend at the selected month</dt><dd id="mk-spend">$0</dd></div><div class="tile"><dt>Net after marketing</dt><dd id="mk-net">$0</dd></div><div class="tile"><dt>Break-even after marketing</dt><dd id="mk-be">n/a</dd></div></dl>
+</section>
+
+</main>
+
+<div class="tbw">
+  <dl class="tb" aria-label="Drawing title block">
+    <div><dt>Drawing</dt><dd>Alethia complete: model, calculator and product</dd></div>
+    <div><dt>For</dt><dd class="hum">The founders</dd></div>
+    <div><dt>Status</dt><dd>Illustrative model, revision A</dd></div>
+  </dl>
+</div>
+
+<script>
+(function () {
+  "use strict";
+  document.documentElement.classList.add("js");
+  var NS = "http://www.w3.org/2000/svg";
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function se(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) { e.setAttribute(k, attrs[k]); } if (parent) { parent.appendChild(e); } return e; }
+  function txt(id, v) { var e = document.getElementById(id); if (e) { e.textContent = v; } }
+  function html(id, v) { var e = document.getElementById(id); if (e) { e.innerHTML = v; } }
+  var USD0 = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+  function usd(v) { return (v < 0 ? "−" : "") + USD0.format(Math.abs(Math.round(v))); }
+  function num(v, d) { return new Intl.NumberFormat("en-US", { maximumFractionDigits: d || 0 }).format(v); }
+  function pct(v, d) { return (v * 100).toFixed(d === undefined ? 1 : d) + "%"; }
+  function cents(v) { return v.toFixed(v < 1 ? 2 : 1) + "¢"; }
+  function short(v) { var a = Math.abs(v), s = v < 0 ? "−" : ""; return a >= 1e6 ? s + "$" + (a / 1e6).toFixed(1) + "M" : a >= 1e3 ? s + "$" + (a / 1e3).toFixed(a >= 1e4 ? 0 : 1) + "k" : s + "$" + Math.round(a); }
+
+  /* ============ params ============ */
+  var PARAMS = [
+    { id: "acq", label: "New Low users in month 1 (acquisition base)", min: 5, max: 200, step: 1, def: 45, unit: "", grp: "funnel" },
+    { id: "g", label: "Acquisition growth per month", min: 0, max: 15, step: 0.5, def: 7, unit: "%", grp: "funnel" },
+    { id: "cL", label: "Low churn per month", min: 0, max: 30, step: 0.5, def: 12, unit: "%", grp: "funnel" },
+    { id: "lm", label: "Low to Mid conversion per month", min: 0, max: 20, step: 0.5, def: 7, unit: "%", grp: "funnel" },
+    { id: "cM", label: "Mid churn per month", min: 0, max: 15, step: 0.5, def: 4, unit: "%", grp: "funnel" },
+    { id: "mh", label: "Mid to High conversion per month", min: 0, max: 20, step: 0.5, def: 6, unit: "%", grp: "funnel" },
+    { id: "cH", label: "High churn per month", min: 0, max: 10, step: 0.5, def: 2, unit: "%", grp: "funnel" },
+    { id: "cl", label: "Coins per Low user per month", min: 0, max: 300, step: 5, def: 60, unit: "", grp: "econ" },
+    { id: "cm", label: "Coins per Mid user per month", min: 100, max: 3000, step: 50, def: 900, unit: "", grp: "econ" },
+    { id: "ch", label: "Coins per High user per month", min: 500, max: 6000, step: 100, def: 2400, unit: "", grp: "econ" },
+    { id: "price", label: "Price per Coin", min: 1, max: 15, step: 0.1, def: 5, unit: "¢", grp: "econ" },
+    { id: "cost", label: "Coin cost to serve", min: 0.05, max: 2, step: 0.05, def: 0.4, unit: "¢", grp: "econ" },
+    { id: "fixed", label: "Fixed cost per month (salaries and infrastructure)", min: 2000, max: 40000, step: 250, def: 12000, unit: "$", grp: "econ" },
+    { id: "month", label: "Selected month for financials", min: 1, max: 24, step: 1, def: 12, unit: "", grp: "econ" },
+    { id: "bp", label: "Base price the usage numbers were measured at", min: 1, max: 15, step: 0.1, def: 5, unit: "¢", grp: "elast" },
+    { id: "e", label: "Price elasticity of Coin usage (Mid and High)", min: 0, max: 3, step: 0.05, def: 1.1, unit: "", grp: "elast" },
+    { id: "unc", label: "Uncertainty, standard deviation as % of the mean", min: 0, max: 60, step: 1, def: 20, unit: "%", grp: "mc" },
+    { id: "N", label: "Monte Carlo runs", min: 100, max: 20000, step: 100, def: 3000, unit: "", grp: "mc" },
+    { id: "mkt", label: "Marketing spend as % of Mid and High Coin revenue", min: 5, max: 40, step: 1, def: 18, unit: "%", grp: "mkt" }
+  ];
+  var S = {};
+  PARAMS.forEach(function (p) { S[p.id] = p.def; });
+  var pending = false;
+  function schedule() { if (!pending) { pending = true; requestAnimationFrame(function () { pending = false; render(); }); } }
+  function decimals(step) { var s = String(step); return s.indexOf(".") < 0 ? 0 : s.split(".")[1].length; }
+  var inputs = {};
+  PARAMS.forEach(function (p) {
+    var host = $('[data-grp="' + p.grp + '"]'); if (!host) { return; }
+    var d = document.createElement("div"); d.className = "ctl";
+    d.innerHTML = '<label for="n-' + p.id + '">' + p.label + '</label><input type="range" id="r-' + p.id + '" min="' + p.min + '" max="' + p.max + '" step="' + p.step + '" value="' + p.def + '" aria-label="' + p.label + '"><span class="nw"><input type="number" id="n-' + p.id + '" min="' + p.min + '" max="' + p.max + '" step="' + p.step + '" value="' + p.def + '" inputmode="decimal"><span class="u">' + (p.unit === "$" ? "$" : p.unit) + '</span></span>';
+    host.appendChild(d);
+    var r = d.querySelector('input[type=range]'), n = d.querySelector('input[type=number]');
+    inputs[p.id] = { r: r, n: n };
+    r.addEventListener("input", function () { S[p.id] = parseFloat(r.value); n.value = (+r.value).toFixed(decimals(p.step)); schedule(); });
+    n.addEventListener("input", function () {
+      var v = parseFloat(n.value); if (isNaN(v)) { return; }
+      v = Math.min(p.max, Math.max(p.min, v)); S[p.id] = v; r.value = v; schedule();
+    });
+    n.addEventListener("change", function () { var v = Math.min(p.max, Math.max(p.min, parseFloat(n.value) || p.def)); n.value = v.toFixed(decimals(p.step)); S[p.id] = v; r.value = v; schedule(); });
+  });
+  function P() {
+    return { acq: S.acq, g: S.g / 100, cL: S.cL / 100, lm: S.lm / 100, cM: S.cM / 100, mh: S.mh / 100, cH: S.cH / 100,
+      cl: S.cl, cm: S.cm, ch: S.ch, price: S.price / 100, cost: S.cost / 100, fixed: S.fixed, month: Math.round(S.month),
+      bp: S.bp / 100, e: S.e, unc: S.unc / 100, N: Math.round(S.N), mkt: S.mkt / 100 };
+  }
+
+  /* ============ model (fixed structure) ============ */
+  function project(p) {
+    var Lw = [], Mw = [], Hw = [], l = 0, m = 0, h = 0;
+    for (var t = 1; t <= 24; t++) {
+      var acq = p.acq * Math.pow(1 + p.g, t - 1);
+      var nl = l * (1 - p.cL - p.lm) + acq;
+      var nm = m * (1 - p.cM - p.mh) + l * p.lm;
+      var nh = h * (1 - p.cH) + m * p.mh;
+      l = nl; m = nm; h = nh; Lw.push(l); Mw.push(m); Hw.push(h);
+    }
+    return { L: Lw, M: Mw, H: Hw };
+  }
+  function usage(p, price) { var f = Math.pow(p.bp / price, p.e); return { cm: p.cm * f, ch: p.ch * f }; }
+  function fin(p, L, M, H, cl, cm, ch, price) {
+    var rev = (M * cm + H * ch) * price, vc = (L * cl + M * cm + H * ch) * p.cost, free = L * cl * p.cost;
+    return { rev: rev, vc: vc, free: free, net: rev - vc - p.fixed };
+  }
+  var pr, proj, E, F, months = [];
+  function compute() {
+    pr = P(); proj = project(pr); E = usage(pr, pr.price); months = [];
+    for (var i = 0; i < 24; i++) {
+      var f = fin(pr, proj.L[i], proj.M[i], proj.H[i], pr.cl, E.cm, E.ch, pr.price);
+      months.push(f);
+    }
+    F = months[pr.month - 1];
+  }
+
+  /* ============ charts (reused everywhere) ============ */
+  function niceStep(r) { var e = Math.pow(10, Math.floor(Math.log10(r || 1))), f = r / e; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * e; }
+  function LineChart(host) { var self = this; this.host = host; this.o = null; if (window.ResizeObserver) { new ResizeObserver(function () { self.draw(); }).observe(host); } }
+  LineChart.prototype.set = function (o) {
+    this.o = o; this.draw();
+    if (o.label) { this.host.setAttribute("aria-label", o.label); }
+  };
+  LineChart.prototype.draw = function () {
+    var o = this.o, host = this.host; if (!o) { return; }
+    var W = host.clientWidth; if (!W) { return; }
+    var mini = !!o.mini, H = o.h || (mini ? 64 : (W < 520 ? 230 : 290));
+    var m = mini ? { l: 4, r: 6, t: 8, b: 8 } : { l: o.yw || 56, r: 14, t: 16, b: 34 };
+    var n = o.series[0].y.length, xs = o.xs || o.series[0].y.map(function (_, i) { return i + 1; });
+    var x0 = xs[0], x1 = xs[xs.length - 1], all = [];
+    o.series.forEach(function (s) { all = all.concat(s.y); });
+    (o.hlines || []).forEach(function (h) { all.push(h.y); });
+    if (o.zero) { all.push(0); }
+    var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all); if (hi === lo) { hi = lo + 1; }
+    if (!mini) { var st = niceStep((hi - lo) / 4); lo = Math.floor(lo / st) * st; hi = Math.ceil(hi / st) * st; var ticks = []; for (var v = lo; v <= hi + st / 2; v += st) { ticks.push(v); } }
+    else { var pad = (hi - lo) * .1; lo -= pad; hi += pad; }
+    var iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var X = function (v) { return m.l + (v - x0) / (x1 - x0 || 1) * iw; }, Y = function (v) { return m.t + ih - (v - lo) / (hi - lo) * ih; };
+    host.innerHTML = "";
+    var svg = se("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "aria-hidden": "true" }, host);
+    if (!mini) {
+      ticks.forEach(function (t) { se("line", { "class": Math.abs(t) < 1e-9 ? "ax" : "gl", x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t) }, svg); se("text", { "class": "tk", x: m.l - 8, y: Y(t) + 4, "text-anchor": "end" }, svg).textContent = (o.yfmt || short)(t); });
+      var xt = o.xticks || [1, 6, 12, 18, 24];
+      xt.forEach(function (t) { se("text", { "class": "tk", x: X(t), y: H - m.b + 20, "text-anchor": "middle" }, svg).textContent = (o.xfmt || function (a) { return a; })(t); });
+      if (o.xtitle) { se("text", { "class": "tk", x: m.l + iw / 2, y: H - 2, "text-anchor": "middle" }, svg).textContent = o.xtitle; }
+    }
+    (o.hlines || []).forEach(function (h) { se("line", { "class": "vl " + (h.cls || ""), x1: m.l, x2: W - m.r, y1: Y(h.y), y2: Y(h.y) }, svg); if (h.label && !mini) { se("text", { "class": "ml " + (h.cls || ""), x: m.l + 6, y: Y(h.y) - 6, "text-anchor": "start" }, svg).textContent = h.label; } });
+    (o.vlines || []).forEach(function (v) {
+      se("line", { "class": "vl " + (v.cls || ""), x1: X(v.x), x2: X(v.x), y1: m.t, y2: H - m.b }, svg);
+      if (v.label && !mini) { var right = X(v.x) > W - 110; se("text", { "class": "ml " + (v.cls || ""), x: X(v.x) + (right ? -6 : 6), y: m.t + 12, "text-anchor": right ? "end" : "start" }, svg).textContent = v.label; }
+    });
+    o.series.forEach(function (s) {
+      var d = s.y.map(function (v, i) { return (i ? "L" : "M") + X(xs[i]).toFixed(1) + " " + Y(v).toFixed(1); }).join(" ");
+      if (s.fill) { se("path", { "class": "ar " + s.cls, d: d + " L" + X(x1) + " " + Y(Math.max(lo, 0)) + " L" + X(x0) + " " + Y(Math.max(lo, 0)) + " Z" }, svg); }
+      var p = se("path", { "class": "ln " + s.cls, d: d }, svg); if (s.dash) { p.setAttribute("stroke-dasharray", s.dash); }
+    });
+    if (mini) { var s0 = o.series[0], li = s0.y.length - 1; se("circle", { "class": "mk", cx: X(xs[li]), cy: Y(s0.y[li]), r: 4 }, svg); }
+    (o.markers || []).forEach(function (mk) {
+      var cx = X(mk.x), cy = Y(mk.y); se("circle", { "class": "mk " + (mk.cls || ""), cx: cx, cy: cy, r: 5.5 }, svg);
+      if (mk.label) { var a = cx < 90 ? "start" : cx > W - 90 ? "end" : "middle"; se("text", { "class": "ml " + (mk.cls || ""), x: cx, y: cy - 12, "text-anchor": a }, svg).textContent = mk.label; }
+    });
+    var lg = host.parentNode.querySelector(".lgd[data-for='" + host.id + "']");
+    if (!mini && o.legend !== false) {
+      if (!lg) { lg = document.createElement("div"); lg.className = "lgd"; lg.setAttribute("data-for", host.id); host.parentNode.appendChild(lg); }
+      lg.innerHTML = o.series.map(function (s) { return '<span><i class="' + s.cls + (s.dash ? " dash" : "") + '"></i>' + s.name + "</span>"; }).join("");
+    }
+  };
+  function HistChart(host) { var self = this; this.host = host; this.o = null; if (window.ResizeObserver) { new ResizeObserver(function () { self.draw(); }).observe(host); } }
+  HistChart.prototype.set = function (o) { this.o = o; this.draw(); if (o.label) { this.host.setAttribute("aria-label", o.label); } };
+  HistChart.prototype.draw = function () {
+    var o = this.o, host = this.host; if (!o) { return; }
+    var W = host.clientWidth; if (!W) { return; }
+    var H = W < 520 ? 230 : 290, m = { l: 12, r: 12, t: 22, b: 42 }, iw = W - m.l - m.r, ih = H - m.t - m.b;
+    var nb = o.counts.length, mx = Math.max.apply(null, o.counts) || 1, lo = o.lo, hi = o.hi;
+    var X = function (v) { return m.l + (v - lo) / (hi - lo) * iw; }, Y = function (c) { return m.t + ih - c / mx * ih; };
+    host.innerHTML = "";
+    var svg = se("svg", { viewBox: "0 0 " + W + " " + H, width: W, height: H, "aria-hidden": "true" }, host);
+    se("line", { "class": "ax", x1: m.l, x2: W - m.r, y1: m.t + ih, y2: m.t + ih }, svg);
+    var bw = (hi - lo) / nb;
+    o.counts.forEach(function (c, i) {
+      var a = lo + i * bw, mid = a + bw / 2;
+      se("rect", { "class": "bar " + (mid >= 0 ? "pos" : "neg"), x: X(a) + 1, y: Y(c), width: Math.max(1, X(a + bw) - X(a) - 2), height: m.t + ih - Y(c) }, svg);
+    });
+    if (o.sd > 0) {
+      var d = ""; for (var i = 0; i <= 80; i++) { var v = lo + (hi - lo) * i / 80, z = (v - o.mean) / o.sd, c = Math.exp(-.5 * z * z) / (o.sd * Math.sqrt(2 * Math.PI)) * o.total * bw; d += (i ? "L" : "M") + X(v).toFixed(1) + " " + Y(Math.min(c, mx * 1.6)).toFixed(1) + " "; }
+      se("path", { "class": "curve", d: d }, svg);
+    }
+    if (lo < 0 && hi > 0) { se("line", { "class": "vl neg", x1: X(0), x2: X(0), y1: m.t, y2: m.t + ih }, svg); var rt = X(0) > W - 120; se("text", { "class": "ml", x: X(0) + (rt ? -6 : 6), y: m.t + 12, "text-anchor": rt ? "end" : "start" }, svg).textContent = "Break-even $0"; }
+    se("line", { "class": "vl", x1: X(o.mean), x2: X(o.mean), y1: m.t, y2: m.t + ih, "stroke-dasharray": "2 3" }, svg);
+    var st = niceStep((hi - lo) / 5);
+    for (var t = Math.ceil(lo / st) * st; t <= hi; t += st) { se("text", { "class": "tk", x: X(t), y: m.t + ih + 18, "text-anchor": "middle" }, svg).textContent = short(t); }
+    se("text", { "class": "tk", x: m.l + iw / 2, y: H - 4, "text-anchor": "middle" }, svg).textContent = "Net profit in one month";
+  };
+
+  /* ============ section 1 chart (illustrative) ============ */
+  var chMoat = new LineChart($("#ch-moat")), chScale = new LineChart($("#ch-scale")), chFunnel = new LineChart($("#ch-funnel")),
+    chSweep = new LineChart($("#ch-sweep")), chNet = new LineChart($("#ch-net")), chMC = new HistChart($("#ch-mc")),
+    chK1 = new LineChart($("#ch-k1")), chK2 = new LineChart($("#ch-k2"));
+  (function () {
+    var xs = [], a = [], b = []; for (var i = 0; i <= 24; i++) { xs.push(i); a.push(100 * (1 - Math.exp(-i / 9))); b.push(22); }
+    chMoat.set({ xs: xs, series: [{ name: "Playbooks sharpened by human-reviewed cases", y: a, cls: "acc", fill: true }, { name: "A copied interface with no case history", y: b, cls: "soft", dash: "5 4" }], xticks: [0, 6, 12, 18, 24], xfmt: function (v) { return v === 0 ? "0" : v + " mo"; }, yfmt: function (v) { return v + "%"; }, xtitle: "Time and reviewed cases, illustrative", yw: 44, label: "Illustrative chart: accuracy with human review climbs, a copied interface stays flat." });
+    chK1.set({ mini: true, series: [{ y: [18400, 19600, 21300, 22800, 24100], cls: "ink" }], label: "Sparkline of monthly revenue rising from 18,400 to 24,100." });
+    chK2.set({ mini: true, series: [{ y: [18, 21, 25, 28, 31], cls: "ink" }], label: "Sparkline of quote-to-order rate rising from 18 to 31 percent." });
+  })();
+
+  /* ============ section 2 connectors ============ */
+  function bmcLines() {
+    var box = $("#bmc"), svg = $("#bmcsvg"); svg.innerHTML = "";
+    if (box.clientWidth < 760 || window.innerWidth <= 980) { return; }
+    var br = box.getBoundingClientRect(), vp = $(".b-vp").getBoundingClientRect(), c = [vp.left - br.left + vp.width / 2, vp.top - br.top + vp.height / 2];
+    $$(".blk", box).forEach(function (b) { if (b.classList.contains("b-vp")) { return; } var r = b.getBoundingClientRect(); se("line", { "class": "cl", x1: c[0], y1: c[1], x2: r.left - br.left + r.width / 2, y2: r.top - br.top + r.height / 2 }, svg); });
+  }
+  if (window.ResizeObserver) { new ResizeObserver(bmcLines).observe($("#bmc")); }
+  window.addEventListener("load", bmcLines);
+
+  /* ============ section 5 tools ============ */
+  var ICO_PPU = '<svg class="ico" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="8"/><path d="M13 9v8M9 13h8" stroke-linecap="round"/></svg>';
+  var ICO_SUB = '<svg class="ico" viewBox="0 0 26 26" aria-hidden="true"><path d="M5 12a8 8 0 0 1 14-4l2 2M21 14a8 8 0 0 1-14 4l-2-2" stroke-linecap="round"/><path d="M21 5v5h-5M5 21v-5h5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var TOOLS = [
+    { h: "Mandatory", w: "Year 1", t: [["OP3 Plan Generator and Follow-up", 0], ["Weekly Check-in Agent", 1], ["Basic KPI Tracker", 1], ["Task Management Agent", 1], ["Material Library", 0]] },
+    { h: "Scale", w: "Years 2 to 3", t: [["CRM Analyzer", 1], ["Financial Analyzer", 1], ["Phone Call Script Writer", 0], ["Email and Outreach Sequence Writer", 0], ["Pricing and Offer Optimizer", 0], ["Competitor Scan Agent", 1], ["Churn Predictor", 1]] },
+    { h: "Mature", w: "Year 5 and beyond", t: [["Autonomous Sales Agent", 1], ["Predictive Revenue Forecaster", 1], ["Exit Readiness Analyzer", 0], ["Cross-business Benchmarking Agent", 1], ["White-label Tool Builder", 0]] }
+  ];
+  $("#tcols").innerHTML = TOOLS.map(function (c) {
+    return '<div class="tcol"><h3>' + c.h + '</h3><p class="when">' + c.w + "</p>" + c.t.map(function (t) {
+      return '<div class="tool ' + (t[1] ? "sub" : "ppu") + '"><span>' + t[0] + "</span>" + (t[1] ? ICO_SUB : ICO_PPU) + "<small>" + (t[1] ? "Subscription, keeps watching" : "Pay-per-use, one shot") + "</small></div>";
+    }).join("") + "</div>";
+  }).join("");
+
+  /* ============ section 8 leaderboard ============ */
+  var COHORT = [46, 41, 36, 31, 29, 27, 25, 24, 22, 21, 19, 18, 16, 15, 13, 12, 10, 8, 6, 3];
+  var LABELS = ["Retail, West Coast, Month 4", "Food service, Northeast, Month 6", "Home services, Midwest, Month 5", "You: Food retail, Northeast, Month 4", "Salon and spa, South, Month 3"];
+  (function () {
+    var me = 31, rank = COHORT.indexOf(me) + 1, total = COHORT.length, top = Math.ceil(rank / total * 100), mx = COHORT[0];
+    $("#lb").innerHTML = LABELS.map(function (l, i) {
+      var v = COHORT[i], isMe = i + 1 === rank;
+      return '<li class="' + (isMe ? "me" : "") + '"><span class="rk">' + (i + 1) + '</span><span>' + l + '<div class="bar" style="width:' + (v / mx * 100) + '%"></div></span><span class="pc">+' + v + "%</span></li>";
+    }).join("") + '<li class="gap">' + (total - LABELS.length) + " more businesses in this cohort</li>";
+    $("#lb-pct").textContent = "Rank " + rank + " of " + total + ": top " + top + "% of businesses that started with a conversion constraint.";
+  })();
+
+  /* ============ render pipeline ============ */
+  var sweepMax = 0;
+  function render() {
+    compute();
+    var mI = pr.month - 1, L = proj.L[mI], M = proj.M[mI], H = proj.H[mI];
+    /* section 3 */
+    txt("m3-month", pr.month); txt("m3-rev", usd(F.rev)); txt("m3-var", usd(F.vc)); txt("m3-fix", usd(pr.fixed));
+    txt("m3-margin", F.rev > 0 ? pct(F.net / F.rev) : "n/a (no revenue yet)");
+    txt("m3-cost", cents(S.cost)); txt("m3-price", cents(S.price)); txt("m3-ratio", (pr.price / pr.cost).toFixed(1) + "×");
+    var revMH = months.map(function (f) { return f.rev; }), net = months.map(function (f) { return f.net; });
+    var scale = -1, be = -1, beMk = -1;
+    for (var i = 0; i < 24; i++) { if (scale < 0 && revMH[i] >= pr.fixed) { scale = i; } if (be < 0 && net[i] > 0) { be = i; } if (beMk < 0 && net[i] - pr.mkt * revMH[i] > 0) { beMk = i; } }
+    chScale.set({ series: [{ name: "Mid and High Coin revenue", y: revMH, cls: "ink", fill: true }], hlines: [{ y: pr.fixed, cls: "neg", label: "Fixed cost " + short(pr.fixed) }], markers: scale >= 0 ? [{ x: scale + 1, y: revMH[scale], label: "Scale point, month " + (scale + 1), cls: "acc" }] : [], yfmt: short, xtitle: "Month", label: scale >= 0 ? "Revenue covers fixed cost at month " + (scale + 1) + "." : "Revenue does not cover fixed cost within 24 months." });
+    txt("m3-scalenote", scale >= 0 ? "Scale point: month " + (scale + 1) + ". Break-even, where net profit after variable cost crosses zero, is " + (be >= 0 ? "month " + (be + 1) : "outside the 24 months") + " (section 10)." : "At these settings Mid and High Coin revenue never covers fixed cost in 24 months. Raise conversion, usage or price, or lower fixed cost.");
+    /* section 4 */
+    chFunnel.set({ series: [{ name: "Low (never pays)", y: proj.L, cls: "soft", dash: "5 4" }, { name: "Mid", y: proj.M, cls: "ink" }, { name: "High", y: proj.H, cls: "pos" }], yfmt: function (v) { return num(v); }, xtitle: "Month", vlines: [{ x: pr.month, label: "Month " + pr.month }], yw: 46, label: "Active users by tier over 24 months. At month " + pr.month + ": Low " + num(L) + ", Mid " + num(M) + ", High " + num(H) + "." });
+    txt("o-month", pr.month); txt("o-rev", usd(F.rev)); txt("o-var", usd(F.vc)); txt("o-free", usd(F.free));
+    var nEl = $("#o-net"); nEl.textContent = (F.net >= 0 ? "▲ " : "▼ ") + usd(F.net); nEl.className = F.net >= 0 ? "pos" : "neg";
+    var rows = [["Low", L, pr.cl, 0, "low"], ["Mid", M, E.cm, 1, ""], ["High", H, E.ch, 1, ""]], tb = "", tcoins = 0;
+    rows.forEach(function (r) {
+      var coins = r[1] * r[2], rev = r[3] ? coins * pr.price : 0, vc = coins * pr.cost, con = rev - vc; tcoins += coins;
+      tb += '<tr class="' + r[4] + '"><td><b>' + r[0] + "</b>" + (r[4] ? '<span class="tag">Never pays</span>' : "") + "</td><td>" + num(r[1]) + "</td><td>" + num(r[2]) + "</td><td>" + num(coins) + "</td>" +
+        '<td class="' + (r[3] ? "" : "zero") + '">' + (r[3] ? usd(rev) : "$0") + "</td><td>" + usd(vc) + '</td><td class="' + (con >= 0 ? "pos" : "neg") + '">' + (con >= 0 ? "▲ " : "▼ ") + usd(con) + "</td></tr>";
+    });
+    tb += '<tr class="tot"><td>All tiers</td><td>' + num(L + M + H) + "</td><td></td><td>" + num(tcoins) + "</td><td>" + usd(F.rev) + "</td><td>" + usd(F.vc) + "</td><td>" + usd(F.rev - F.vc) + "</td></tr>";
+    tb += '<tr><td>Fixed cost</td><td></td><td></td><td></td><td></td><td>' + usd(pr.fixed) + '</td><td class="neg">▼ −' + USD0.format(pr.fixed) + "</td></tr>";
+    tb += '<tr class="tot"><td>Net profit</td><td></td><td></td><td></td><td></td><td></td><td class="' + (F.net >= 0 ? "pos" : "neg") + '">' + (F.net >= 0 ? "▲ " : "▼ ") + usd(F.net) + "</td></tr>";
+    html("fin-body", tb);
+    txt("o-freenote", "Low revenue is $0 by design. Low users cost " + usd(F.free) + " a month to serve in free Coin, a liability carried by Mid and High revenue. Mid and High revenue is " + usd(F.rev) + ".");
+    /* section 6 sweep */
+    var xs = [], ys = [], best = -1e18, bi = 0;
+    for (var pc = 1; pc <= 15.001; pc += 0.25) { var pp = pc / 100, u = usage(pr, pp), f = fin(pr, L, M, H, pr.cl, u.cm, u.ch, pp); xs.push(pc); ys.push(f.net); if (f.net > best) { best = f.net; bi = xs.length - 1; } }
+    chSweep.set({ xs: xs, series: [{ name: "Net profit at month " + pr.month, y: ys, cls: "ink", fill: true }], zero: true, xticks: [1, 3, 5, 7, 9, 11, 13, 15], xfmt: function (v) { return v + "¢"; }, yfmt: short, xtitle: "Price per Coin", vlines: [{ x: S.price, label: "Current " + cents(S.price), cls: "neg" }], markers: [{ x: xs[bi], y: ys[bi], label: "Best " + cents(xs[bi]), cls: "acc" }], label: "Net profit peaks at a price of " + cents(xs[bi]) + "." });
+    var cur = fin(pr, L, M, H, pr.cl, E.cm, E.ch, pr.price);
+    txt("o-opt", "Profit-maximizing price in this range: " + cents(xs[bi]) + ", net " + usd(best) + " a month. At the current " + cents(S.price) + ", net is " + usd(cur.net) + ". Effective usage at the current price: Mid " + num(E.cm) + " Coins, High " + num(E.ch) + " Coins per user." + (S.e <= 1 ? " With elasticity at or below 1, raising price never loses revenue, so the best price sits at the top of the range." : ""));
+    /* section 7 monte carlo */
+    runMC(pr, L, M, H);
+    /* section 10 */
+    chNet.set({ series: [{ name: "Net profit", y: net, cls: "ink", fill: true }], zero: true, yfmt: short, xtitle: "Month", markers: be >= 0 ? [{ x: be + 1, y: net[be], label: "Break-even, month " + (be + 1), cls: "pos" }] : [], yw: 60, label: be >= 0 ? "Net profit crosses zero in month " + (be + 1) + "." : "Net profit does not cross zero within 24 months." });
+    $("#be-m").innerHTML = (be >= 0 ? "Month " + (be + 1) : "Not yet") + "<small>" + (be >= 0 ? "net profit crosses zero" : "within 24 months at these settings") + "</small>";
+    txt("be-p", be >= 0 ? "At a fixed cost of " + usd(pr.fixed) + " a month (both salaries included) and a price of " + cents(S.price) + " per Coin, net profit first turns positive in month " + (be + 1) + ", reaching " + usd(net[be]) + ". Before that, the business is not called profitable." : "At a fixed cost of " + usd(pr.fixed) + " a month and a price of " + cents(S.price) + " per Coin, net profit stays below zero for all 24 months. Move the sliders in section 4 to see what closes the gap.");
+    /* section 11 */
+    var mt = "";
+    [1, 6, 12, 18, 24].forEach(function (mo) { var i = mo - 1, sp = pr.mkt * revMH[i], na = net[i] - sp; mt += "<tr><td>Month " + mo + "</td><td>" + usd(revMH[i]) + "</td><td>" + usd(sp) + '</td><td class="' + (na >= 0 ? "pos" : "neg") + '">' + (na >= 0 ? "▲ " : "▼ ") + usd(na) + "</td></tr>"; });
+    html("mk-body", mt);
+    txt("mk-spend", usd(pr.mkt * F.rev)); var nam = F.net - pr.mkt * F.rev, ne = $("#mk-net"); ne.textContent = (nam >= 0 ? "▲ " : "▼ ") + usd(nam); ne.className = nam >= 0 ? "pos" : "neg";
+    txt("mk-be", beMk >= 0 ? "Month " + (beMk + 1) : "Not within 24 months");
+  }
+
+  /* ============ Monte Carlo ============ */
+  function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  function runMC(p, L, M, H) {
+    var rand = rng(20240607), spare = null;
+    function gauss() { if (spare !== null) { var s = spare; spare = null; return s; } var u = 0, v = 0; while (u === 0) { u = rand(); } v = rand(); var r = Math.sqrt(-2 * Math.log(u)); spare = r * Math.sin(2 * Math.PI * v); return r * Math.cos(2 * Math.PI * v); }
+    function draw(mean) { return Math.max(0, mean + gauss() * p.unc * mean); }
+    var N = p.N, vals = new Array(N), sum = 0, pos = 0;
+    for (var i = 0; i < N; i++) {
+      var f = fin(p, draw(L), draw(M), draw(H), draw(p.cl), draw(E.cm), draw(E.ch), p.price);
+      vals[i] = f.net; sum += f.net; if (f.net > 0) { pos++; }
+    }
+    var mean = sum / N, ss = 0, mn = 1e18, mxv = -1e18; for (var j = 0; j < N; j++) { var d = vals[j] - mean; ss += d * d; if (vals[j] < mn) { mn = vals[j]; } if (vals[j] > mxv) { mxv = vals[j]; } }
+    var sd = Math.sqrt(ss / N); if (mxv - mn < 1) { mxv = mn + 1; }
+    var NB = 32, counts = new Array(NB).fill(0), lo = mn, hi = mxv, bw = (hi - lo) / NB;
+    for (var k = 0; k < N; k++) { var b = Math.min(NB - 1, Math.floor((vals[k] - lo) / bw)); counts[b]++; }
+    chMC.set({ counts: counts, lo: lo, hi: hi, mean: mean, sd: sd, total: N, label: "Histogram of " + num(N) + " simulated months. Mean " + usd(mean) + ", probability of profit " + pct(pos / N, 0) + "." });
+    txt("mc-mean", usd(mean)); txt("mc-sd", usd(sd)); txt("mc-p", pct(pos / N, 1));
+    txt("mc-note", num(N) + " runs at month " + p.month + ". Each run draws Low, Mid and High populations and per-user Coin usage from a normal distribution with mean at the current value and standard deviation " + pct(p.unc, 0) + " of the mean, then computes net profit at " + cents(S.price) + " per Coin.");
+  }
+
+  /* ============ nav, theme, reveals ============ */
+  var links = $$("#navlist a"), secs = links.map(function (a) { return $(a.getAttribute("href")); });
+  function setActive(id) { links.forEach(function (a) { var on = a.getAttribute("href") === "#" + id; a.classList.toggle("on", on); if (on) { a.setAttribute("aria-current", "true"); var ul = a.closest("ul"); var l = a.offsetLeft - 40; if (ul.scrollWidth > ul.clientWidth) { ul.scrollTo({ left: l }); } } else { a.removeAttribute("aria-current"); } }); }
+  var io1 = "IntersectionObserver" in window ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { setActive(e.target.id); } }); }, { rootMargin: "-25% 0px -65% 0px" }) : null;
+  secs.forEach(function (s) { if (s && io1) { io1.observe(s); } });
+  var rv = "IntersectionObserver" in window ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); rv.unobserve(e.target); } }); }, { threshold: .06 }) : null;
+  $$(".rv").forEach(function (s) { if (rv) { rv.observe(s); } else { s.classList.add("in"); } });
+  var root = document.documentElement, btn = $("#themeBtn");
+  btn.addEventListener("click", function () {
+    var dark = root.getAttribute("data-theme") ? root.getAttribute("data-theme") === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    root.setAttribute("data-theme", dark ? "light" : "dark");
+  });
+  render();
+})();
+</script>
+</body>
+</html>
